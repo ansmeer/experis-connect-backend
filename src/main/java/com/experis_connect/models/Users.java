@@ -1,5 +1,6 @@
 package com.experis_connect.models;
 
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,4 +26,5 @@ public class Users {
     private String bio;
     @Column
     private String fun_fact;
+
 }
