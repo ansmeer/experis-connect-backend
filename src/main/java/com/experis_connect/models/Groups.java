@@ -7,7 +7,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class Post {
+public class Groups {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -16,20 +16,11 @@ public class Post {
     @Column
     private String updated_at;
     @Column
-    private String title;
+    private String name;
     @Column
-    private String content;
+    private String description;
     @Column
-    private String post_target;
+    private String color;
     @Column
-    private String sender_id;
-    @Column
-    private int reply_parent_id;
-    @Column
-    private String target_user;
-    @Column
-    private int target_group;
-    @Column
-    private int target_topic;
-
+    private boolean is_private;
 }
