@@ -23,12 +23,12 @@ public class TopicController {
 
     @GetMapping("{id}")
     public ResponseEntity findById(@PathVariable int id){
-        return ResponseEntity.ok(topicService.findById(id));
+        return ResponseEntity.ok(topicMapper.topicToTopicDTO(topicService.findById(id)));
     }
 
     @GetMapping
     public ResponseEntity findAll(){
-        return ResponseEntity.ok(topicService.findAll());
+        return ResponseEntity.ok(topicMapper.topicToTopicDTO(topicService.findAll()));
     }
 
     @PostMapping

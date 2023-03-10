@@ -23,12 +23,12 @@ public class GroupController {
 
     @GetMapping("{id}")
     public ResponseEntity findById(@PathVariable int id){
-        return ResponseEntity.ok(groupService.findAll());
+        return ResponseEntity.ok(groupMapper.groupToGroupDTO(groupService.findById(id)));
     }
 
     @GetMapping
     public ResponseEntity findAll(){
-        return ResponseEntity.ok(groupService.findAll());
+        return ResponseEntity.ok(groupMapper.groupToGroupDTO(groupService.findAll()));
     }
 
     @PostMapping

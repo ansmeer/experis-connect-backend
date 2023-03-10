@@ -23,12 +23,12 @@ public class PostController {
 
     @GetMapping("{id}")
     public ResponseEntity findById(@PathVariable int id){
-        return ResponseEntity.ok(postService.findById(id));
+        return ResponseEntity.ok(postMapper.postToPostDTO(postService.findById(id)));
     }
 
     @GetMapping
     public ResponseEntity findAll(){
-        return ResponseEntity.ok(postService.findAll());
+        return ResponseEntity.ok(postMapper.postToPostDTO(postService.findAll()));
     }
 
     @PostMapping

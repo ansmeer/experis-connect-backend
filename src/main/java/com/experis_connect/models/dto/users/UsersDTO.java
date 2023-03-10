@@ -3,6 +3,8 @@ package com.experis_connect.models.dto.users;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Getter
 @Setter
 public class UsersDTO {
@@ -14,4 +16,6 @@ public class UsersDTO {
     private String status;
     private String bio;
     private String fun_fact;
+    private Set<Integer> posts;
+    private Set<Integer> posted;
 }
