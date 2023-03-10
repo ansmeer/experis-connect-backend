@@ -38,4 +38,4 @@ out/
 
 ### DB VARIABLES ###
 
-env.properties
+dev.properties
