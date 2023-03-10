@@ -12,7 +12,7 @@ public class PostPostDTO {
     private String updated_at;
     private String title;
     private String content;
-    private PostTargetType post_target;
+    private String post_target;
     private String sender_id;
     private int reply_parent_id;
     private String target_user;

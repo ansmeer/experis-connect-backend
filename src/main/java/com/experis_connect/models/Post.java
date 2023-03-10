@@ -20,7 +20,7 @@ public class Post {
     @Column
     private String content;
     @Column
-    private PostTargetType post_target;
+    private String post_target;
     @Column
     private String sender_id;
     @Column
