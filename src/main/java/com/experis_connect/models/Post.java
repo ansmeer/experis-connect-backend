@@ -1,6 +1,5 @@
 package com.experis_connect.models;
 
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +7,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class Users {
+public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -17,14 +16,20 @@ public class Users {
     @Column
     private String updated_at;
     @Column
-    private String name;
+    private String title;
     @Column
-    private String picture;
+    private String content;
     @Column
-    private String status;
+    private PostTargetType post_target;
     @Column
-    private String bio;
+    private String sender_id;
     @Column
-    private String fun_fact;
+    private int reply_parent_id;
+    @Column
+    private String target_user;
+    @Column
+    private int target_group;
+    @Column
+    private int target_topic;
 
 }

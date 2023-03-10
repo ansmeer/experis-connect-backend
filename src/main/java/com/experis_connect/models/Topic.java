@@ -1,6 +1,5 @@
 package com.experis_connect.models;
 
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +7,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class Users {
+public class Topic {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -19,12 +18,7 @@ public class Users {
     @Column
     private String name;
     @Column
-    private String picture;
+    private String description;
     @Column
-    private String status;
-    @Column
-    private String bio;
-    @Column
-    private String fun_fact;
-
+    private String color;
 }
