@@ -12,4 +12,9 @@ public class PostPostDTO {
     private String title;
     private String content;
     private String post_target;
+    private int sender_id;
+    private int reply_parent_id;
+    private int target_user;
+    private int target_group;
+    private int target_topic;
 }
