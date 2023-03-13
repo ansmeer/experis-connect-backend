@@ -12,8 +12,7 @@ import java.util.Set;
 @Setter
 public class Users {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private String id;
     @Column
     private String created_at;
     @Column

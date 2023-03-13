@@ -17,9 +17,9 @@ public class SecurityConfig {
                 .cors().and()
                 .sessionManagement().disable()
                 .csrf().disable()
-                .authorizeHttpRequests(authorize -> authorize
-                                .anyRequest().authenticated()
-                )
+//                .authorizeHttpRequests(authorize -> authorize
+//                                .anyRequest().authenticated()
+//                )
                 .oauth2ResourceServer()
                 .jwt()
                 .jwtAuthenticationConverter(jwtAuthenticationConverter())
