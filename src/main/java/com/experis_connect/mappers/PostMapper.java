@@ -46,7 +46,7 @@ public abstract class PostMapper {
     public abstract Post postPostDTOToPost(PostPostDTO postPostDTO);
 
     @Named(value = "userIdToUser")
-    Users map(Integer value){
+    Users map(String value){
         try{
             return usersService.findById(value);
         }catch(Exception e){

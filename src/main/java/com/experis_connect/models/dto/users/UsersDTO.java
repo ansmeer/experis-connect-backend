@@ -8,7 +8,7 @@ import java.util.Set;
 @Getter
 @Setter
 public class UsersDTO {
-    private int id;
+    private String id;
     private String created_at;
     private String updated_at;
     private String name;

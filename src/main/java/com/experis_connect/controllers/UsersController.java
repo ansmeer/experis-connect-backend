@@ -26,7 +26,7 @@ public class UsersController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity findById(@PathVariable int id){
+    public ResponseEntity findById(@PathVariable String id){
         return ResponseEntity.ok(usersMapper.usersToUsersDTO(usersService.findById(id)));
     }
 
@@ -44,7 +44,7 @@ public class UsersController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity update(@RequestBody UsersPutDTO entity, @PathVariable int id){
+    public ResponseEntity update(@RequestBody UsersPutDTO entity, @PathVariable String id){
         if(id != entity.getId() || !usersService.exists(id))
             return ResponseEntity.badRequest().build();
 
@@ -54,7 +54,7 @@ public class UsersController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity deleteById(@PathVariable int id){
+    public ResponseEntity deleteById(@PathVariable String id){
         usersService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
