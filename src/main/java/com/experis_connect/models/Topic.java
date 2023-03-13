@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Entity
 @Getter
 @Setter
@@ -21,4 +23,13 @@ public class Topic {
     private String description;
     @Column
     private String color;
+    @ManyToMany
+    @JoinTable(
+            name = "topic_user",
+            joinColumns = {@JoinColumn(name = "topic_id")},
+            inverseJoinColumns = {@JoinColumn(name = "users_id")}
+    )
+    private Set<Users> users;
+    @OneToMany(mappedBy = "target_topic")
+    private Set<Post> posts;
 }

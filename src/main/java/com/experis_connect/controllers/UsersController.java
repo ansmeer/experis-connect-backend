@@ -23,12 +23,12 @@ public class UsersController {
 
     @GetMapping("{id}")
     public ResponseEntity findById(@PathVariable int id){
-        return ResponseEntity.ok(usersService.findById(id));
+        return ResponseEntity.ok(usersMapper.usersToUsersDTO(usersService.findById(id)));
     }
 
     @GetMapping
     public ResponseEntity findAll(){
-        return ResponseEntity.ok(usersService.findAll());
+        return ResponseEntity.ok(usersMapper.usersToUsersDTO(usersService.findAll()));
     }
 
     @PostMapping

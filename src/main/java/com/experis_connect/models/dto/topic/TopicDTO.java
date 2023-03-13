@@ -3,6 +3,8 @@ package com.experis_connect.models.dto.topic;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Getter
 @Setter
 public class TopicDTO {
@@ -12,4 +14,5 @@ public class TopicDTO {
     private String name;
     private String description;
     private String color;
+    private Set<Integer> posts;
 }
