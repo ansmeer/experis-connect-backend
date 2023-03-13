@@ -6,10 +6,14 @@ import com.experis_connect.models.dto.group.GroupPostDTO;
 import com.experis_connect.models.dto.group.GroupPutDTO;
 import com.experis_connect.services.group.GroupService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
+@CrossOrigin(origins = {"http://localhost:5173", "https://experis-connect.vercel.app"}, maxAge = 3600)
+    // TODO move origins to environment variables
+@PreAuthorize("hasRole('USER')")
 @RestController
 @RequestMapping(path = "api/v1/group")
 public class GroupController {
