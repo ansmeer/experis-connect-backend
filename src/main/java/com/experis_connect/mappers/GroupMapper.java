@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public interface GroupMapper {
     @Mapping(target = "posts", qualifiedByName = "postsToPostId")
     GroupDTO groupToGroupDTO(Groups group);
-    Collection<Groups> groupToGroupDTO(Collection<Groups> groups);
+    Collection<GroupDTO> groupToGroupDTO(Collection<Groups> groups);
     Groups groupPutDTOToGroup(GroupPutDTO groupPutDTO);
     Groups groupPostDTOToGroup(GroupPostDTO groupPostDTO);
 
