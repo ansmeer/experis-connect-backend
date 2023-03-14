@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.time.LocalDate;
 
 @CrossOrigin(origins = {"http://localhost:5173", "https://experis-connect.vercel.app"}, maxAge = 3600)
     // TODO move origins to environment variables
@@ -49,6 +50,9 @@ public class TopicController {
             return ResponseEntity.badRequest().build();
 
         Topic topic = topicMapper.topicPutDTOToTopic(entity);
+        topic.setId(id);
+        topic.setCreated_at(topicService.findById(id).getCreated_at());
+        topic.setUpdated_at(LocalDate.now().toString());
         topicService.update(topic);
         return ResponseEntity.noContent().build();
     }

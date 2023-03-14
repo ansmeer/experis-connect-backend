@@ -68,22 +68,8 @@ public class UsersController {
             return ResponseEntity.badRequest().build();
 
         Users users = usersMapper.usersPutDTOToUsers(entity);
-        Users oldUser = usersService.findById(id);
-        if(users.getName() == null){
-            users.setName(oldUser.getName());
-        }
-        if(users.getPicture() == null){
-            users.setPicture(oldUser.getPicture());
-        }
-        if(users.getStatus() == null){
-            users.setStatus(oldUser.getStatus());
-        }
-        if(users.getBio() == null){
-            users.setBio(oldUser.getBio());
-        }
-        if(users.getFunFact() == null){
-            users.setFunFact(oldUser.getFunFact());
-        }
+        users.setId(id);
+        users.setCreatedAt(usersService.findById(id).getCreatedAt());
         users.setUpdatedAt(LocalDate.now().toString());
         usersService.update(users);
         return ResponseEntity.ok(usersMapper.usersToUsersDTO(usersService.findById(id)));
