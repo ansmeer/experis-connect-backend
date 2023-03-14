@@ -15,5 +15,4 @@ public class GroupDTO {
     private String description;
     private String color;
     private boolean is_private;
-    private Set<Integer> posts;
 }

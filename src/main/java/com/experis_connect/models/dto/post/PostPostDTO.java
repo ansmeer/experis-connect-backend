@@ -6,14 +6,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PostPostDTO {
-    private String created_at;
-    private String updated_at;
     private String title;
     private String content;
     private String post_target;
-    private int sender_id;
+    private String sender_id;
     private int reply_parent_id;
-    private int target_user;
+    private String target_user;
     private int target_group;
     private int target_topic;
 }

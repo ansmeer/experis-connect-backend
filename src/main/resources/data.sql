@@ -10,4 +10,11 @@ INSERT INTO Topic (created_at, updated_at, name, description, color) VALUES ('20
 INSERT INTO Groups (created_at, updated_at, name, description, color, is_private) VALUES ('2022-01-01', '2022-02-02', 'Key Pushers', 'The WoW Dungeon Divers', 'pink', false);
 
 -- Post Test Data
-INSERT INTO Post (created_at, updated_at, title, content, post_target, owner_id, group_id) VALUES ('2022-01-01', '2022-02-02', 'Pushing Keys', 'Going for 22s! I got an SBG key, FREE!', 'TOPIC', 'ABC-123', 1);
+INSERT INTO Post (created_at, updated_at, title, content, post_target, owner_id, group_id) VALUES ('2022-01-01', '2022-02-02', 'Pushing Keys', 'Going for 22s! I got an SBG key, FREE!', 'TOPIC', 'fda39db5-429a-4d95-8a39-1aa1fb9f3249', 1);
+
+-- Users in Groups Data
+INSERT INTO group_user("groups_id", "users_id") VALUES (1,'78ee330e-f8b3-48b8-8443-06583a0742fa');
+
+-- Users in Topics Data
+INSERT INTO topic_user("topic_id", "users_id") VALUES (1, 'fda39db5-429a-4d95-8a39-1aa1fb9f3249');
+

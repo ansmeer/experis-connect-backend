@@ -43,9 +43,17 @@ public class UsersController {
     @PostMapping
     public ResponseEntity<UsersDTO> add(@RequestHeader(HttpHeaders.AUTHORIZATION) String token){
         String id = getIdFromToken(token);
+        String[] chunks = token.split("\\.");
+        Base64.Decoder decoder = Base64.getUrlDecoder();
+        String payload = new String(decoder.decode(chunks[1]));
+        String[] payloadData = payload.split(",");
+        System.out.println(payloadData[23]);
+        String payloadName[] = payloadData[23].split(":");
+        String name = payloadName[1].replace("\"", "");
 
         Users user = new Users();
         user.setId(id);
+        user.setName(name);
         user.setCreatedAt(LocalDate.now().toString());
         user.setUpdatedAt(LocalDate.now().toString());
         usersService.add(user);
@@ -56,7 +64,7 @@ public class UsersController {
 
     @PutMapping("{id}")
     public ResponseEntity<UsersDTO> update(@RequestBody UsersPutDTO entity, @PathVariable String id){
-        if(!id.equals(entity.getId()) || !usersService.exists(id))
+        if(!usersService.exists(id))
             return ResponseEntity.badRequest().build();
 
         Users users = usersMapper.usersPutDTOToUsers(entity);

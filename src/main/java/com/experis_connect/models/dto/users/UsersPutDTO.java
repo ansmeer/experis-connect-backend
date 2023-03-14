@@ -6,7 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UsersPutDTO {
-    private String id;
     private String name;
     private String picture;
     private String status;
