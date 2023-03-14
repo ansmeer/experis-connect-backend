@@ -1,7 +1,7 @@
 -- User Test Data
-INSERT INTO Users (id, created_at, updated_at, name, picture, status, bio, fun_fact) VALUES ('ABC-123', '2022-01-01', '2022-02-02', 'Eivind', 'https://ychef.files.bbci.co.uk/976x549/p07ryyyj.jpg', 'single', 'From Oslo', 'Has a lazy eye');
-INSERT INTO Users (id, created_at, updated_at, name, picture, status, bio, fun_fact) VALUES ('DEF-456', '2022-01-01', '2022-02-02', 'Martin', 'https://icatcare.org/app/uploads/2018/07/Thinking-of-getting-a-cat.png', 'single', 'From Oslo', 'Has a lazy eye');
-INSERT INTO Users (id, created_at, updated_at, name, picture, status, bio, fun_fact) VALUES ('GHI-789', '2022-01-01', '2022-02-02', 'William', 'https://www.rd.com/wp-content/uploads/2021/01/GettyImages-1175550351.jpg', 'single', 'From Oslo', 'Has a lazy eye');
+INSERT INTO Users (id, created_at, updated_at, name, picture, status, bio, fun_fact) VALUES ('fda39db5-429a-4d95-8a39-1aa1fb9f3249', '2022-01-01', '2022-02-02', 'Eivind', 'https://ychef.files.bbci.co.uk/976x549/p07ryyyj.jpg', 'single', 'From Oslo', 'Has a lazy eye');
+INSERT INTO Users (id, created_at, updated_at, name, picture, status, bio, fun_fact) VALUES ('78ee330e-f8b3-48b8-8443-06583a0742fa', '2022-01-01', '2022-02-02', 'Martin', 'https://icatcare.org/app/uploads/2018/07/Thinking-of-getting-a-cat.png', 'single', 'From Oslo', 'Has a lazy eye');
+INSERT INTO Users (id, created_at, updated_at, name, picture, status, bio, fun_fact) VALUES ('b1af30bd-0f25-4bf1-b001-cc6a8babe84d', '2022-01-01', '2022-02-02', 'William', 'https://www.rd.com/wp-content/uploads/2021/01/GettyImages-1175550351.jpg', 'single', 'From Oslo', 'Has a lazy eye');
 
 -- Topic Test Data
 INSERT INTO Topic (created_at, updated_at, name, description, color) VALUES ('2022-01-01', '2022-02-02', 'World of Warcraft', 'Place to flex on Nick', 'brown');
