@@ -13,18 +13,18 @@ public class Groups {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column
-    private String created_at;
-    @Column
-    private String updated_at;
+    @Column(name="created_at")
+    private String createdAt;
+    @Column(name="updated_at")
+    private String updatedAt;
     @Column
     private String name;
     @Column
     private String description;
     @Column
     private String color;
-    @Column
-    private boolean is_private;
+    @Column(name="is_private")
+    private boolean isPrivate;
     @ManyToMany
     @JoinTable(
             name = "group_user",

@@ -9,5 +9,5 @@ public class GroupPostDTO {
     private String name;
     private String description;
     private String color;
-    private boolean is_private;
+    private boolean isPrivate;
 }
