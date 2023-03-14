@@ -14,5 +14,4 @@ public class TopicDTO {
     private String name;
     private String description;
     private String color;
-    private Set<Integer> posts;
 }

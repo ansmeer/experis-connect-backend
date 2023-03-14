@@ -45,7 +45,7 @@ public class TopicController {
 
     @PutMapping("{id}")
     public ResponseEntity update(@RequestBody TopicPutDTO entity, @PathVariable int id){
-        if(id != entity.getId() || !topicService.exists(id))
+        if(!topicService.exists(id))
             return ResponseEntity.badRequest().build();
 
         Topic topic = topicMapper.topicPutDTOToTopic(entity);

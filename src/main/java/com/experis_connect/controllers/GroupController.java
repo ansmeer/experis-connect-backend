@@ -44,7 +44,7 @@ public class GroupController {
     }
     @PutMapping("{id}")
     public ResponseEntity update(@RequestBody GroupPutDTO entity, @PathVariable int id){
-        if(id != entity.getId() || !groupService.exists(id))
+        if(!groupService.exists(id))
             return ResponseEntity.badRequest().build();
 
         Groups group = groupMapper.groupPutDTOToGroup(entity);

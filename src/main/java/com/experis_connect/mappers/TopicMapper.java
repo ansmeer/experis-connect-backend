@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring")
 public interface TopicMapper {
 
-    @Mapping(target = "posts", qualifiedByName = "postsToPostId")
+    //@Mapping(target = "posts", qualifiedByName = "postsToPostId")
     TopicDTO topicToTopicDTO(Topic topic);
     Collection<TopicDTO> topicToTopicDTO(Collection<Topic> topics);
     Topic topicPutDTOToTopic(TopicPutDTO topicPutDTO);

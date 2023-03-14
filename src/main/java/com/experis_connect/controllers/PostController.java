@@ -45,7 +45,7 @@ public class PostController {
 
     @PutMapping("{id}")
     public ResponseEntity update(@RequestBody PostPutDTO entity, @PathVariable int id){
-        if(id != entity.getId() || !postService.exists(id))
+        if(!postService.exists(id))
             return ResponseEntity.badRequest().build();
 
         Post post = postMapper.postPutDTOToPost(entity);

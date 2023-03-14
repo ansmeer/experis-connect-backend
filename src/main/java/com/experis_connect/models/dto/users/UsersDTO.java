@@ -16,6 +16,6 @@ public class UsersDTO {
     private String status;
     private String bio;
     private String funFact;
-    private Set<Integer> posts;
-    private Set<Integer> posted;
+    private Set<Integer> groups;
+    private Set<Integer> topics;
 }
