@@ -41,7 +41,7 @@ public class UsersController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> add(@RequestHeader(HttpHeaders.AUTHORIZATION) String token){
+    public ResponseEntity<UsersDTO> add(@RequestHeader(HttpHeaders.AUTHORIZATION) String token){
         String id = getIdFromToken(token);
 
         Users user = new Users();
@@ -51,11 +51,11 @@ public class UsersController {
         usersService.add(user);
         URI uri = URI.create("api/v1/users/" +1);
 
-        return ResponseEntity.created(uri).build();
+        return ResponseEntity.created(uri).body(usersMapper.usersToUsersDTO(usersService.findById(id)));
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Void> update(@RequestBody UsersPutDTO entity, @PathVariable String id){
+    public ResponseEntity<UsersDTO> update(@RequestBody UsersPutDTO entity, @PathVariable String id){
         if(!id.equals(entity.getId()) || !usersService.exists(id))
             return ResponseEntity.badRequest().build();
 
@@ -78,7 +78,7 @@ public class UsersController {
         }
         users.setUpdatedAt(LocalDate.now().toString());
         usersService.update(users);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(usersMapper.usersToUsersDTO(usersService.findById(id)));
     }
 
     private String getIdFromToken(String token){
