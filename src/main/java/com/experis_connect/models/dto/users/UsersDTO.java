@@ -9,13 +9,13 @@ import java.util.Set;
 @Setter
 public class UsersDTO {
     private String id;
-    private String created_at;
-    private String updated_at;
+    private String createdAt;
+    private String updatedAt;
     private String name;
     private String picture;
     private String status;
     private String bio;
-    private String fun_fact;
+    private String funFact;
     private Set<Integer> posts;
     private Set<Integer> posted;
 }

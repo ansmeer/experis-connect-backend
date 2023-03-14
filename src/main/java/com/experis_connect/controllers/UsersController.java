@@ -46,8 +46,8 @@ public class UsersController {
 
         Users user = new Users();
         user.setId(id);
-        user.setCreated_at(LocalDate.now().toString());
-        user.setUpdated_at(LocalDate.now().toString());
+        user.setCreatedAt(LocalDate.now().toString());
+        user.setUpdatedAt(LocalDate.now().toString());
         usersService.add(user);
         URI uri = URI.create("api/v1/users/" +1);
 
@@ -73,10 +73,10 @@ public class UsersController {
         if(users.getBio() == null){
             users.setBio(oldUser.getBio());
         }
-        if(users.getFun_fact() == null){
-            users.setFun_fact(oldUser.getFun_fact());
+        if(users.getFunFact() == null){
+            users.setFunFact(oldUser.getFunFact());
         }
-        users.setUpdated_at(LocalDate.now().toString());
+        users.setUpdatedAt(LocalDate.now().toString());
         usersService.update(users);
         return ResponseEntity.noContent().build();
     }
