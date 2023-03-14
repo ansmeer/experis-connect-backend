@@ -13,10 +13,10 @@ import java.util.Set;
 public class Users {
     @Id
     private String id;
-    @Column
-    private String created_at;
-    @Column
-    private String updated_at;
+    @Column(name="created_at")
+    private String createdAt;
+    @Column(name="updated_at")
+    private String updatedAt;
     @Column
     private String name;
     @Column
@@ -25,8 +25,8 @@ public class Users {
     private String status;
     @Column
     private String bio;
-    @Column
-    private String fun_fact;
+    @Column(name="fun_fact")
+    private String funFact;
     @ManyToMany(mappedBy = "users")
     private Set<Groups> groups;
     @ManyToMany(mappedBy = "users")

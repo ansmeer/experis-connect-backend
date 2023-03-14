@@ -15,5 +15,5 @@ public class UsersPostDTO {
     private String picture;
     private String status;
     private String bio;
-    private String fun_fact;
+    private String funFact;
 }
