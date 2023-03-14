@@ -7,8 +7,6 @@ import lombok.Setter;
 @Setter
 public class UsersPutDTO {
     private String id;
-    private String created_at;
-    private String updated_at;
     private String name;
     private String picture;
     private String status;
