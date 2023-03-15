@@ -2,6 +2,7 @@ package com.experis_connect.controllers;
 
 import com.experis_connect.mappers.GroupMapper;
 import com.experis_connect.models.Groups;
+import com.experis_connect.models.dto.group.GroupDTO;
 import com.experis_connect.models.dto.group.GroupPostDTO;
 import com.experis_connect.models.dto.group.GroupPutDTO;
 import com.experis_connect.services.group.GroupService;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.time.LocalDate;
+import java.util.Collection;
 
 @CrossOrigin(origins = {"http://localhost:5173", "https://experis-connect.vercel.app"}, maxAge = 3600)
     // TODO move origins to environment variables
@@ -27,37 +29,37 @@ public class GroupController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity findById(@PathVariable int id){
+    public ResponseEntity<GroupDTO> findById(@PathVariable int id){
         return ResponseEntity.ok(groupMapper.groupToGroupDTO(groupService.findById(id)));
     }
 
     @GetMapping
-    public ResponseEntity findAll(){
+    public ResponseEntity<Collection<GroupDTO>> findAll(){
         return ResponseEntity.ok(groupMapper.groupToGroupDTO(groupService.findAll()));
     }
 
     @PostMapping
-    public ResponseEntity add(@RequestBody GroupPostDTO entity){
+    public ResponseEntity<Object> add(@RequestBody GroupPostDTO entity){
         Groups group = groupMapper.groupPostDTOToGroup(entity);
         groupService.add(group);
         URI uri = URI.create("api/v1/group/" + group.getId());
         return ResponseEntity.created(uri).build();
     }
     @PutMapping("{id}")
-    public ResponseEntity update(@RequestBody GroupPutDTO entity, @PathVariable int id){
+    public ResponseEntity<Object> update(@RequestBody GroupPutDTO entity, @PathVariable int id){
         if(!groupService.exists(id))
             return ResponseEntity.badRequest().build();
 
         Groups group = groupMapper.groupPutDTOToGroup(entity);
         group.setId(id);
-        group.setCreated_at(groupService.findById(id).getCreated_at());
-        group.setUpdated_at(LocalDate.now().toString());
+        group.setCreatedAt(groupService.findById(id).getCreatedAt());
+        group.setUpdatedAt(LocalDate.now().toString());
         groupService.update(group);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity deleteById(@PathVariable int id){
+    public ResponseEntity<Object> deleteById(@PathVariable int id){
         groupService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
