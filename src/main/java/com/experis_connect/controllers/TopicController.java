@@ -71,8 +71,8 @@ public class TopicController {
 
         Topic topic = topicMapper.topicPutDTOToTopic(entity);
         topic.setId(id);
-        topic.setCreated_at(topicService.findById(id).getCreated_at());
-        topic.setUpdated_at(LocalDate.now().toString());
+        topic.setCreatedAt(topicService.findById(id).getCreatedAt());
+        topic.setUpdatedAt(LocalDate.now().toString());
         topicService.update(topic);
         return ResponseEntity.noContent().build();
     }

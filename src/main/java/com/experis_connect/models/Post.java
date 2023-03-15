@@ -13,33 +13,32 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column
-    private String created_at;
-    @Column
-    private String updated_at;
+    @Column(name = "created_at")
+    private String createdAt;
+    @Column(name = "updated_at")
+    private String updatedAt;
     @Column
     private String title;
     @Column
     private String content;
-    @Column
-    private String post_target;
+    @Column(name = "post_target")
+    private String postTarget;
     @ManyToOne
     @JoinColumn(name = "owner_id")
-    private Users sender_id;
+    private Users senderId;
     @ManyToOne
     @JoinColumn(name = "parent_id")
-    private Post reply_parent_id;
-
-    @OneToMany(mappedBy = "reply_parent_id")
+    private Post replyParentId;
+    @OneToMany(mappedBy = "replyParentId")
     private Set<Post> replies;
     @ManyToOne
     @JoinColumn(name = "users_id")
-    private Users target_user;
+    private Users targetUser;
     @ManyToOne
     @JoinColumn(name = "group_id")
-    private Groups target_group;
+    private Groups targetGroup;
     @ManyToOne
     @JoinColumn(name = "topic_id")
-    private Topic target_topic;
+    private Topic targetTopic;
 
 }
