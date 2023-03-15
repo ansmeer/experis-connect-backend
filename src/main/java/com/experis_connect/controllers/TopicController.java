@@ -56,8 +56,8 @@ public class TopicController {
         Set<Users> user = new HashSet<>();
         user.add(usersService.findById(id));
         topic.setUsers(user);
-        topic.setCreated_at(LocalDate.now().toString());
-        topic.setUpdated_at(LocalDate.now().toString());
+        topic.setCreatedAt(LocalDate.now().toString());
+        topic.setUpdatedAt(LocalDate.now().toString());
 
         topicService.add(topic);
         URI uri = URI.create("api/v1/topic/" + topic.getId());
