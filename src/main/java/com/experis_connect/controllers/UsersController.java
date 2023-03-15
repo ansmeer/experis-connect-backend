@@ -43,6 +43,7 @@ public class UsersController {
     @PostMapping
     public ResponseEntity<UsersDTO> add(@RequestHeader(HttpHeaders.AUTHORIZATION) String token){
         String id = getIdFromToken(token);
+        // This part finds the name inside the token.
         String[] chunks = token.split("\\.");
         Base64.Decoder decoder = Base64.getUrlDecoder();
         String payload = new String(decoder.decode(chunks[1]));
