@@ -40,11 +40,8 @@ public class GroupController {
 
     @GetMapping
     public ResponseEntity<Collection<GroupDTO>> findAll(@RequestParam Optional<String> search, Optional<Integer> limit, Optional<Integer> offset){
-        String name = search.orElse("").toLowerCase();
-        int size = limit.orElse(10);
-        int skips = offset.orElse(0);
-        System.out.println("Name: " + name + ", Limit: " + size + ", Offset: " + skips);
-        return ResponseEntity.ok(groupMapper.groupToGroupDTO(groupService.searchResultsWithLimitOffset(name, skips, size)));
+        return ResponseEntity.ok(groupMapper.groupToGroupDTO(
+                groupService.searchResultsWithLimitOffset(search.orElse("").toLowerCase(), offset.orElse(0), limit.orElse(99999999))));
     }
 
     @PostMapping

@@ -50,8 +50,8 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Set<Groups> searchResultsWithLimitOffset(String name, int page, int size) {
-        return groupRepository.findTopicsByNameWithLimitOffset(name, size, page);
+    public Set<Groups> searchResultsWithLimitOffset(String search, int offset, int limit) {
+        return groupRepository.findTopicsByNameWithLimitOffset(search, limit, offset);
     }
 
     @Override
