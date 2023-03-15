@@ -30,6 +30,6 @@ public class Topic {
             inverseJoinColumns = {@JoinColumn(name = "users_id")}
     )
     private Set<Users> users;
-    @OneToMany(mappedBy = "target_topic")
+    @OneToMany(mappedBy = "targetTopic")
     private Set<Post> posts;
 }
