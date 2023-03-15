@@ -15,10 +15,8 @@ import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;
-import java.util.Set;
-import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring", uses = { UsersService.class, GroupService.class, TopicService.class, PostService.class } )
+@Mapper(componentModel = "spring", uses = {UsersService.class, GroupService.class, TopicService.class, PostService.class})
 public abstract class PostMapper {
 
     @Autowired
@@ -30,50 +28,56 @@ public abstract class PostMapper {
     @Autowired
     protected PostService postService;
 
-    @Mapping(target = "target_group", source = "target_group.id")
-    @Mapping(target = "target_topic", source = "target_topic.id")
-    @Mapping(target = "target_user", source = "target_user.id")
-    @Mapping(target = "sender_id", source = "sender_id.id")
-    @Mapping(target = "reply_parent_id", source = "reply_parent_id.id")
+    @Mapping(target = "targetGroup", source = "targetGroup.id")
+    @Mapping(target = "targetTopic", source = "targetTopic.id")
+    @Mapping(target = "targetUser", source = "targetUser.id")
+    @Mapping(target = "senderId", source = "senderId.id")
+    @Mapping(target = "replyParentId", source = "replyParentId.id")
     public abstract PostDTO postToPostDTO(Post post);
+
     public abstract Collection<PostDTO> postToPostDTO(Collection<Post> posts);
+
     public abstract Post postPutDTOToPost(PostPutDTO postPutDTO);
-    @Mapping(target = "sender_id",source = "sender_id")
-    @Mapping(target = "reply_parent_id",source = "reply_parent_id", qualifiedByName = "parentPostIdToPost")
-    @Mapping(target = "target_user",source = "target_user", qualifiedByName = "userIdToUser")
-    @Mapping(target = "target_group",source = "target_group", qualifiedByName = "groupIdToGroup")
-    @Mapping(target = "target_topic",source = "target_topic", qualifiedByName = "topicIdToTopic")
+
+    @Mapping(target = "senderId", source = "senderId")
+    @Mapping(target = "replyParentId", source = "replyParentId", qualifiedByName = "parentPostIdToPost")
+    @Mapping(target = "targetUser", source = "targetUser", qualifiedByName = "userIdToUser")
+    @Mapping(target = "targetGroup", source = "targetGroup", qualifiedByName = "groupIdToGroup")
+    @Mapping(target = "targetTopic", source = "targetTopic", qualifiedByName = "topicIdToTopic")
     public abstract Post postPostDTOToPost(PostPostDTO postPostDTO);
 
     @Named(value = "userIdToUser")
-    Users map(String value){
-        try{
+    Users map(String value) {
+        try {
             return usersService.findById(value);
-        }catch(Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
+
     @Named(value = "groupIdToGroup")
-    Groups maps(Integer value){
-        try{
+    Groups maps(Integer value) {
+        try {
             return groupService.findById(value);
-        }catch(Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
+
     @Named(value = "topicIdToTopic")
-    Topic mapen(Integer value){
-        try{
+    Topic mapen(Integer value) {
+        try {
             return topicService.findById(value);
-        }catch(Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
+
     @Named(value = "parentPostIdToPost")
-    Post maper(Integer value){
-        try{
+    Post maper(Integer value) {
+        try {
             return postService.findById(value);
-        }catch(Exception e){
+        } catch (Exception e) {
             return null;
         }
     }

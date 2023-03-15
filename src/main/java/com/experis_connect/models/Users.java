@@ -13,9 +13,9 @@ import java.util.Set;
 public class Users {
     @Id
     private String id;
-    @Column(name="created_at")
+    @Column(name = "created_at")
     private String createdAt;
-    @Column(name="updated_at")
+    @Column(name = "updated_at")
     private String updatedAt;
     @Column
     private String name;
@@ -25,7 +25,7 @@ public class Users {
     private String status;
     @Column
     private String bio;
-    @Column(name="fun_fact")
+    @Column(name = "fun_fact")
     private String funFact;
     @ManyToMany(mappedBy = "users")
     private Set<Groups> groups;
@@ -33,11 +33,11 @@ public class Users {
     private Set<Topic> topics;
 
     // This is the users "DM" posts.
-    @OneToMany(mappedBy = "target_user")
+    @OneToMany(mappedBy = "targetUser")
     private Set<Post> posts;
 
     // This is the users own posts
-    @OneToMany(mappedBy = "sender_id")
+    @OneToMany(mappedBy = "senderId")
     private Set<Post> posted;
 
 }

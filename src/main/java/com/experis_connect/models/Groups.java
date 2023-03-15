@@ -32,6 +32,6 @@ public class Groups {
             inverseJoinColumns = {@JoinColumn(name = "users_id")}
     )
     private Set<Users> users;
-    @OneToMany(mappedBy = "target_group")
+    @OneToMany(mappedBy = "targetGroup")
     private Set<Post> posts;
 }
