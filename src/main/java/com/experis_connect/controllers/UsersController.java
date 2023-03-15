@@ -43,14 +43,7 @@ public class UsersController {
     @PostMapping
     public ResponseEntity<UsersDTO> add(@RequestHeader(HttpHeaders.AUTHORIZATION) String token){
         String id = getIdFromToken(token);
-        // This part finds the name inside the token.
-        String[] chunks = token.split("\\.");
-        Base64.Decoder decoder = Base64.getUrlDecoder();
-        String payload = new String(decoder.decode(chunks[1]));
-        String[] payloadData = payload.split(",");
-        System.out.println(payloadData[23]);
-        String payloadName[] = payloadData[23].split(":");
-        String name = payloadName[1].replace("\"", "");
+        String name = getNameFromToken(token);
 
         Users user = new Users();
         user.setId(id);
@@ -85,5 +78,15 @@ public class UsersController {
         String id = payloadData[1].replace("\"", "");
 
         return id;
+    }
+
+    private String getNameFromToken(String token){
+        String[] chunks = token.split("\\.");
+        Base64.Decoder decoder = Base64.getUrlDecoder();
+        String payload = new String(decoder.decode(chunks[1]));
+        String[] payloadData = payload.split(",");
+        System.out.println(payloadData[23]);
+        String payloadName[] = payloadData[23].split(":");
+        return payloadName[1].replace("\"", "");
     }
 }
