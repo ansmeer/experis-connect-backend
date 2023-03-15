@@ -12,7 +12,7 @@ public class PostDTO {
     private String title;
     private String content;
     private String postTarget;
-    private int senderId;
+    private String senderId;
     private int replyParentId;
     private String targetUser;
     private int targetGroup;
