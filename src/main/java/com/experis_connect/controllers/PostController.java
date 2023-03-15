@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Optional;
 
 @CrossOrigin(origins = {"http://localhost:5173", "https://experis-connect.vercel.app"}, maxAge = 3600)
 // TODO move origins to environment variables
@@ -63,5 +64,20 @@ public class PostController {
     public ResponseEntity<Object> deleteById(@PathVariable int id) {
         postService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/topic/{id}")
+    public ResponseEntity<Collection<PostDTO>> findAllPostsInATopic(@PathVariable int id, @RequestParam Optional<String> search, Optional<Integer> limit, Optional<Integer> offset){
+        String searching = search.orElse("");
+        int limiting = limit.orElse(999999999);
+        int offsetting = offset.orElse(0);
+        return ResponseEntity.ok(postMapper.postToPostDTO(postService.findAllPostsInTopic(id, searching, limiting, offsetting)));
+    }
+    @GetMapping("/group/{id}")
+    public ResponseEntity<Collection<PostDTO>> findAllPostsInAGroup(@PathVariable int id, @RequestParam Optional<String> search, Optional<Integer> limit, Optional<Integer> offset){
+        String searching = search.orElse("");
+        int limiting = limit.orElse(999999999);
+        int offsetting = offset.orElse(0);
+        return ResponseEntity.ok(postMapper.postToPostDTO(postService.findAllPostsInGroup(id, searching, limiting, offsetting)));
     }
 }

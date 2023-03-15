@@ -6,6 +6,7 @@ import com.experis_connect.repositories.PostRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Set;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -43,5 +44,15 @@ public class PostServiceImpl implements PostService {
     @Override
     public boolean exists(Integer id) {
         return postRepository.existsById(id);
+    }
+
+    @Override
+    public Set<Post> findAllPostsInTopic(int id, String search, int limit, int offset) {
+        return postRepository.findPostsInATopicWithSearchLimitOffset(id, search, limit, offset);
+    }
+
+    @Override
+    public Set<Post> findAllPostsInGroup(int id, String search, int limit, int offset) {
+        return postRepository.findPostsInAGroupWithSearchLimitOffset(id, search, limit, offset);
     }
 }
