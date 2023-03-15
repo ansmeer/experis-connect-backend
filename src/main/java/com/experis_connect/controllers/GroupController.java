@@ -73,10 +73,14 @@ public class GroupController {
         return ResponseEntity.noContent().build();
     }
     @PostMapping("{id}/join")
-    public ResponseEntity<Object> addUserToGroup(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable int id){
-        if(!groupService.exists(id))
+    public ResponseEntity<Object> addUserToGroup(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable int id, @RequestParam Optional<String> user){
+        if (!groupService.exists(id))
             return ResponseEntity.badRequest().build();
-        String userId = getIdFromToken(token);
+
+        String userId= user.orElse("");
+        if(userId.equals("")) {
+            userId = getIdFromToken(token);
+        }
         groupService.addUserToGroup(userId, id);
         return ResponseEntity.noContent().build();
     }
