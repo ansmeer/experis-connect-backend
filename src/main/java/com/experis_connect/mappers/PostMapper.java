@@ -15,6 +15,8 @@ import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", uses = {UsersService.class, GroupService.class, TopicService.class, PostService.class})
 public abstract class PostMapper {
@@ -33,6 +35,7 @@ public abstract class PostMapper {
     @Mapping(target = "targetUser", source = "targetUser.id")
     @Mapping(target = "senderId", source = "senderId.id")
     @Mapping(target = "replyParentId", source = "replyParentId.id")
+    @Mapping(target = "replies", source = "replies", qualifiedByName = "postsToPostId")
     public abstract PostDTO postToPostDTO(Post post);
 
     public abstract Collection<PostDTO> postToPostDTO(Collection<Post> posts);
@@ -80,5 +83,14 @@ public abstract class PostMapper {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    @Named(value = "postsToPostId")
+    Set<Integer> map(Set<Post> value) {
+        if (value == null)
+            return null;
+        return value.stream()
+                .map(Post::getId)
+                .collect(Collectors.toSet());
     }
 }
