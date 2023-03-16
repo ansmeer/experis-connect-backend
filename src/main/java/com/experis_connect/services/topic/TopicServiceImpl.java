@@ -50,8 +50,8 @@ public class TopicServiceImpl implements TopicService{
     }
 
     @Override
-    public Set<Topic> searchResultsWithLimitOffset(String name, int page, int size) {
-        return topicRepository.findTopicsByNameWithLimitOffset(name, size, page);
+    public Set<Topic> searchResultsWithLimitOffset(String search, int offset, int limit) {
+        return topicRepository.findTopicsByNameWithLimitOffset(search, limit, offset);
     }
 
     @Override
