@@ -7,6 +7,7 @@ import com.experis.experisconnect.models.Users;
 import com.experis.experisconnect.models.dto.post.PostDTO;
 import com.experis.experisconnect.models.dto.post.PostPostDTO;
 import com.experis.experisconnect.models.dto.post.PostPutDTO;
+import com.experis.experisconnect.models.dto.users.SenderDTO;
 import com.experis.experisconnect.services.group.GroupService;
 import com.experis.experisconnect.services.post.PostService;
 import com.experis.experisconnect.services.topic.TopicService;
@@ -33,7 +34,7 @@ public abstract class PostMapper {
     @Mapping(target = "targetGroup", source = "targetGroup.id")
     @Mapping(target = "targetTopic", source = "targetTopic.id")
     @Mapping(target = "targetUser", source = "targetUser.id")
-    @Mapping(target = "senderId", source = "senderId.id")
+    @Mapping(target = "senderId", source = "senderId", qualifiedByName = "userToSenderDTO")
     @Mapping(target = "replyParentId", source = "replyParentId.id")
     @Mapping(target = "replies", source = "replies", qualifiedByName = "postsToPostId")
     public abstract PostDTO postToPostDTO(Post post);
@@ -48,6 +49,17 @@ public abstract class PostMapper {
     @Mapping(target = "targetGroup", source = "targetGroup", qualifiedByName = "groupIdToGroup")
     @Mapping(target = "targetTopic", source = "targetTopic", qualifiedByName = "topicIdToTopic")
     public abstract Post postPostDTOToPost(PostPostDTO postPostDTO);
+
+    @Named(value = "userToSenderDTO")
+    SenderDTO mapSend(Users value){
+        if(value == null)
+            return null;
+        SenderDTO sender = new SenderDTO();
+        sender.setId(value.getId());
+        sender.setName(value.getName());
+        sender.setPicture(value.getPicture());
+        return sender;
+    }
 
     @Named(value = "userIdToUser")
     Users map(String value) {
