@@ -39,9 +39,10 @@ public class GroupController {
     }
 
     @GetMapping
-    public ResponseEntity<Collection<GroupDTO>> findAll(@RequestParam Optional<String> search, Optional<Integer> limit, Optional<Integer> offset){
+    public ResponseEntity<Collection<GroupDTO>> findAll(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestParam Optional<String> search, Optional<Integer> limit, Optional<Integer> offset){
+        String userId = getIdFromToken(token);
         return ResponseEntity.ok(groupMapper.groupToGroupDTO(
-                groupService.searchResultsWithLimitOffset(search.orElse("").toLowerCase(), offset.orElse(0), limit.orElse(99999999))));
+                groupService.searchResultsWithLimitOffset(userId, search.orElse("").toLowerCase(), offset.orElse(0), limit.orElse(99999999))));
     }
 
     @PostMapping
@@ -80,6 +81,12 @@ public class GroupController {
         }
         groupService.addUserToGroup(userId, id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<Collection<GroupDTO>> findGroupsForAUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String token){
+        String userId = getIdFromToken(token);
+        return ResponseEntity.ok(groupMapper.groupToGroupDTO(groupService.findGroupsWithUser(userId)));
     }
 
     private String getIdFromToken(String token){
