@@ -9,6 +9,7 @@ import com.experis.experisconnect.models.dto.group.GroupPutDTO;
 import com.experis.experisconnect.services.group.GroupService;
 import com.experis.experisconnect.services.users.UsersService;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -34,8 +35,12 @@ public class GroupController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<GroupDTO> findById(@PathVariable int id){
-        return ResponseEntity.ok(groupMapper.groupToGroupDTO(groupService.findById(id)));
+    public ResponseEntity<GroupDTO> findById(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable int id){
+        String userId = getIdFromToken(token);
+        GroupDTO group = groupMapper.groupToGroupDTO(groupService.findByIdWhereUserHasAccess(userId, id));
+        if(group == null)
+            return new ResponseEntity("This group is private or does not exist", HttpStatus.FORBIDDEN);
+        return ResponseEntity.ok(group);
     }
 
     @GetMapping
@@ -75,6 +80,11 @@ public class GroupController {
         if (!groupService.exists(id))
             return ResponseEntity.badRequest().build();
 
+        boolean privateGroup = groupService.findById(id).isPrivate();
+        if(privateGroup) {
+            if (!groupService.checkIfUserInGroup(getIdFromToken(token), id))
+                return new ResponseEntity<>("This is a private group. To join, request access from a member", HttpStatus.FORBIDDEN);
+        }
         String userId= user.orElse("");
         if(userId.equals("")) {
             userId = getIdFromToken(token);
