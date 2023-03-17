@@ -36,8 +36,8 @@ public class GroupController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<GroupDTO> findById(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable int id){
-        String userId = getIdFromToken(token);
+    public ResponseEntity<GroupDTO> findById(Principal principal, @PathVariable int id){
+        String userId = principal.getName();
         GroupDTO group = groupMapper.groupToGroupDTO(groupService.findByIdWhereUserHasAccess(userId, id));
         if(group == null)
             return new ResponseEntity("This group is private or does not exist", HttpStatus.FORBIDDEN);
@@ -83,7 +83,7 @@ public class GroupController {
 
         boolean privateGroup = groupService.findById(id).isPrivate();
         if(privateGroup) {
-            if (!groupService.checkIfUserInGroup(getIdFromToken(principal.getName()), id))
+            if (!groupService.checkIfUserInGroup(principal.getName(), id))
                 return new ResponseEntity<>("This is a private group. To join, request access from a member", HttpStatus.FORBIDDEN);
         }
         String userId= user.orElse("");
