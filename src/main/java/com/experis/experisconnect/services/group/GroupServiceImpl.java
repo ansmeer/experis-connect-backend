@@ -66,4 +66,14 @@ public class GroupServiceImpl implements GroupService {
     public Set<Groups> findGroupsWithUser(String userId) {
         return groupRepository.findGroupsAUserIsIn(userId);
     }
+
+    @Override
+    public Groups findByIdWhereUserHasAccess(String userId, int groupId) {
+        return groupRepository.findGroupByIdIfUserHasAccess(userId, groupId);
+    }
+
+    @Override
+    public boolean checkIfUserInGroup(String userId, int groupId) {
+        return groupRepository.checkIfUserIsInGroup(userId, groupId);
+    }
 }
