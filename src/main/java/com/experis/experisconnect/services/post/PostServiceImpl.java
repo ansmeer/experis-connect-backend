@@ -70,4 +70,14 @@ public class PostServiceImpl implements PostService {
     public Set<Post> findPostsUserSubscribedTo(String id, String search, int limit, int offset) {
         return postRepository.findPostsThatUserSubscribesToWithSearchLimitOffset(id, search, limit, offset);
     }
+
+    @Override
+    public Set<Post> findPostsFromTopicUserIsSubscribedTo(String id) {
+        return postRepository.findAllPostsFromATopicUserIsSubscribedTo(id);
+    }
+
+    @Override
+    public Set<Post> findPostsFromGroupUserIsSubscribedTo(String id) {
+        return postRepository.findAllPostsFromAGroupUserIsSubscribedTo(id);
+    }
 }

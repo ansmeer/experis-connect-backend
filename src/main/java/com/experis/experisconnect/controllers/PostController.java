@@ -106,4 +106,16 @@ public class PostController {
         int offsetting = offset.orElse(0);
         return ResponseEntity.ok(postMapper.postToPostDTO(postService.findPostsUserSubscribedTo(userId, searching, limiting, offsetting)));
     }
+
+    @GetMapping("/topic")
+    public ResponseEntity<Collection<PostDTO>> findPostInTopicUserIsSubscribedTo(Principal principal) {
+        String userId = principal.getName();
+        return ResponseEntity.ok(postMapper.postToPostDTO(postService.findPostsFromTopicUserIsSubscribedTo(userId)));
+    }
+
+    @GetMapping("/group")
+    public ResponseEntity<Collection<PostDTO>> findPostInGroupUserIsSubscribedTo(Principal principal) {
+        String userId = principal.getName();
+        return ResponseEntity.ok(postMapper.postToPostDTO(postService.findPostsFromGroupUserIsSubscribedTo(userId)));
+    }
 }
