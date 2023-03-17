@@ -45,7 +45,7 @@ public class TopicController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
-            @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
+            @ApiResponse(responseCode = "404", description = "Topic not found", content = @Content)
     })
     public ResponseEntity findById(@PathVariable int id){
         return ResponseEntity.ok(topicMapper.topicToTopicDTO(topicService.findById(id)));

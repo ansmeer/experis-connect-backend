@@ -107,7 +107,7 @@ public class PostController {
             @ApiResponse(responseCode = "200", description = "Success",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             array = @ArraySchema(schema = @Schema(implementation = PostDTO.class)))),
-            @ApiResponse(responseCode = "404", description = "Franchise not found", content = @Content)
+            @ApiResponse(responseCode = "404", description = "Posts not found", content = @Content)
     })
     public ResponseEntity<Collection<PostDTO>> findAllPostsInATopic(@PathVariable int id, @RequestParam Optional<String> search, Optional<Integer> limit, Optional<Integer> offset){
         String searching = search.orElse("");
@@ -122,7 +122,7 @@ public class PostController {
             @ApiResponse(responseCode = "200", description = "Success",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             array = @ArraySchema(schema = @Schema(implementation = PostDTO.class)))),
-            @ApiResponse(responseCode = "404", description = "Franchise not found", content = @Content)
+            @ApiResponse(responseCode = "404", description = "Posts not found", content = @Content)
     })
     public ResponseEntity<Collection<PostDTO>> findAllPostsInAGroup(@PathVariable int id, @RequestParam Optional<String> search, Optional<Integer> limit, Optional<Integer> offset){
         String searching = search.orElse("");
