@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Optional;
@@ -34,14 +35,11 @@ public class PostController {
         return ResponseEntity.ok(postMapper.postToPostDTO(postService.findById(id)));
     }
 
-    @GetMapping
-    public ResponseEntity<Collection<PostDTO>> findAll() {
-        return ResponseEntity.ok(postMapper.postToPostDTO(postService.findAll()));
-    }
-
     @PostMapping
     public ResponseEntity<Object> add(@RequestBody PostPostDTO entity) {
         Post post = postMapper.postPostDTOToPost(entity);
+        post.setCreatedAt(LocalDate.now().toString());
+        post.setUpdatedAt(LocalDate.now().toString());
         postService.add(post);
         URI uri = URI.create("api/v1/post/" + post.getId());
         return ResponseEntity.created(uri).build();
@@ -67,17 +65,45 @@ public class PostController {
     }
 
     @GetMapping("/topic/{id}")
-    public ResponseEntity<Collection<PostDTO>> findAllPostsInATopic(@PathVariable int id, @RequestParam Optional<String> search, Optional<Integer> limit, Optional<Integer> offset){
-        String searching = search.orElse("");
+    public ResponseEntity<Collection<PostDTO>> findAllPostsInATopic(@PathVariable int id, @RequestParam Optional<String> search, Optional<Integer> limit, Optional<Integer> offset) {
+        String searching = search.orElse("").toLowerCase();
         int limiting = limit.orElse(999999999);
         int offsetting = offset.orElse(0);
         return ResponseEntity.ok(postMapper.postToPostDTO(postService.findAllPostsInTopic(id, searching, limiting, offsetting)));
     }
+
     @GetMapping("/group/{id}")
-    public ResponseEntity<Collection<PostDTO>> findAllPostsInAGroup(@PathVariable int id, @RequestParam Optional<String> search, Optional<Integer> limit, Optional<Integer> offset){
-        String searching = search.orElse("");
+    public ResponseEntity<Collection<PostDTO>> findAllPostsInAGroup(@PathVariable int id, @RequestParam Optional<String> search, Optional<Integer> limit, Optional<Integer> offset) {
+        String searching = search.orElse("").toLowerCase();
         int limiting = limit.orElse(999999999);
         int offsetting = offset.orElse(0);
         return ResponseEntity.ok(postMapper.postToPostDTO(postService.findAllPostsInGroup(id, searching, limiting, offsetting)));
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<Collection<PostDTO>> findAllPostsToAUser(Principal principal, @RequestParam Optional<String> search, Optional<Integer> limit, Optional<Integer> offset) {
+        String userId = principal.getName();
+        String searching = search.orElse("").toLowerCase();
+        int limiting = limit.orElse(999999999);
+        int offsetting = offset.orElse(0);
+        return ResponseEntity.ok(postMapper.postToPostDTO(postService.findAllPostsToUser(userId, searching, limiting, offsetting)));
+    }
+
+    @GetMapping("/user/{senderId}")
+    public ResponseEntity<Collection<PostDTO>> findAllPostsToAUser(Principal principal, @PathVariable String senderId, @RequestParam Optional<String> search, Optional<Integer> limit, Optional<Integer> offset) {
+        String userId = principal.getName();
+        String searching = search.orElse("").toLowerCase();
+        int limiting = limit.orElse(999999999);
+        int offsetting = offset.orElse(0);
+        return ResponseEntity.ok(postMapper.postToPostDTO(postService.findAllPostsToUserFromSpecificUser(userId, senderId, searching, limiting, offsetting)));
+    }
+
+    @GetMapping
+    public ResponseEntity<Collection<PostDTO>> findPostsUserIsSubscribedTo(Principal principal, @RequestParam Optional<String> search, Optional<Integer> limit, Optional<Integer> offset) {
+        String userId = principal.getName();
+        String searching = search.orElse("").toLowerCase();
+        int limiting = limit.orElse(999999999);
+        int offsetting = offset.orElse(0);
+        return ResponseEntity.ok(postMapper.postToPostDTO(postService.findPostsUserSubscribedTo(userId, searching, limiting, offsetting)));
     }
 }

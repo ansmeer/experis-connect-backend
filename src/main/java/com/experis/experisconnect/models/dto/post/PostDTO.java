@@ -1,5 +1,6 @@
 package com.experis.experisconnect.models.dto.post;
 
+import com.experis.experisconnect.models.dto.users.SenderDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +15,7 @@ public class PostDTO {
     private String title;
     private String content;
     private String postTarget;
-    private String senderId;
+    private SenderDTO senderId;
     private int replyParentId;
     private Set<Integer> replies;
     private String targetUser;
