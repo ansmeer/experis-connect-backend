@@ -36,11 +36,6 @@ public class PostController {
         return ResponseEntity.ok(postMapper.postToPostDTO(postService.findById(id)));
     }
 
-    /*@GetMapping
-    public ResponseEntity<Collection<PostDTO>> findAll() {
-        return ResponseEntity.ok(postMapper.postToPostDTO(postService.findAll()));
-    }*/
-
     @PostMapping
     public ResponseEntity<Object> add(@RequestBody PostPostDTO entity) {
         Post post = postMapper.postPostDTOToPost(entity);
