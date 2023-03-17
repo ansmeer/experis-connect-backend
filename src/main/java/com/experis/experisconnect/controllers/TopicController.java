@@ -8,12 +8,12 @@ import com.experis.experisconnect.models.dto.topic.TopicPostDTO;
 import com.experis.experisconnect.models.dto.topic.TopicPutDTO;
 import com.experis.experisconnect.services.topic.TopicService;
 import com.experis.experisconnect.services.users.UsersService;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -45,9 +45,9 @@ public class TopicController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> add(@RequestBody TopicPostDTO entity, @RequestHeader(HttpHeaders.AUTHORIZATION) String token){
+    public ResponseEntity<Object> add(@RequestBody TopicPostDTO entity, Principal principal){
         Topic topic = topicMapper.topicPostDTOToTopic(entity);
-        String id = getIdFromToken(token);
+        String id = principal.getName();
         Set<Users> user = new HashSet<>();
         user.add(usersService.findById(id));
         topic.setUsers(user);
@@ -79,28 +79,17 @@ public class TopicController {
     }
 
     @PostMapping("{id}/join")
-    public ResponseEntity<Object> addUserToTopic(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable int id){
+    public ResponseEntity<Object> addUserToTopic(Principal principal, @PathVariable int id){
         if(!topicService.exists(id))
             return ResponseEntity.badRequest().build();
-        String userId = getIdFromToken(token);
+        String userId = principal.getName();
         topicService.addUserToTopic(userId, id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/user")
-    public ResponseEntity<Collection<TopicDTO>> findTopicsForAUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String token){
-        String userId = getIdFromToken(token);
+    public ResponseEntity<Collection<TopicDTO>> findTopicsForAUser(Principal principal){
+        String userId = principal.getName();
         return ResponseEntity.ok(topicMapper.topicToTopicDTO(topicService.findTopicsWithUser(userId)));
-    }
-
-    private String getIdFromToken(String token){
-        String[] chunks = token.split("\\.");
-        Base64.Decoder decoder = Base64.getUrlDecoder();
-        String payload = new String(decoder.decode(chunks[1]));
-        String[] payloadData = payload.split(",");
-        payloadData = payloadData[6].split(":");
-        String id = payloadData[1].replace("\"", "");
-
-        return id;
     }
 }

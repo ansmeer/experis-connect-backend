@@ -15,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -44,16 +45,16 @@ public class GroupController {
     }
 
     @GetMapping
-    public ResponseEntity<Collection<GroupDTO>> findAll(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestParam Optional<String> search, Optional<Integer> limit, Optional<Integer> offset){
-        String userId = getIdFromToken(token);
+    public ResponseEntity<Collection<GroupDTO>> findAll(Principal principal, @RequestParam Optional<String> search, Optional<Integer> limit, Optional<Integer> offset){
+        String userId = principal.getName();
         return ResponseEntity.ok(groupMapper.groupToGroupDTO(
                 groupService.searchResultsWithLimitOffset(userId, search.orElse("").toLowerCase(), offset.orElse(0), limit.orElse(99999999))));
     }
 
     @PostMapping
-    public ResponseEntity<Object> add(@RequestBody GroupPostDTO entity, @RequestHeader(HttpHeaders.AUTHORIZATION) String token){
+    public ResponseEntity<Object> add(@RequestBody GroupPostDTO entity, Principal principal){
         Groups group = groupMapper.groupPostDTOToGroup(entity);
-        String id = getIdFromToken(token);
+        String id = principal.getName();
         Set<Users> user = new HashSet<>();
         user.add(usersService.findById(id));
         group.setUsers(user);
@@ -76,37 +77,26 @@ public class GroupController {
         return ResponseEntity.noContent().build();
     }
     @PostMapping("{id}/join")
-    public ResponseEntity<Object> addUserToGroup(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable int id, @RequestParam Optional<String> user){
+    public ResponseEntity<Object> addUserToGroup(Principal principal, @PathVariable int id, @RequestParam Optional<String> user){
         if (!groupService.exists(id))
             return ResponseEntity.badRequest().build();
 
         boolean privateGroup = groupService.findById(id).isPrivate();
         if(privateGroup) {
-            if (!groupService.checkIfUserInGroup(getIdFromToken(token), id))
+            if (!groupService.checkIfUserInGroup(getIdFromToken(principal.getName()), id))
                 return new ResponseEntity<>("This is a private group. To join, request access from a member", HttpStatus.FORBIDDEN);
         }
         String userId= user.orElse("");
         if(userId.equals("")) {
-            userId = getIdFromToken(token);
+            userId = principal.getName();
         }
         groupService.addUserToGroup(userId, id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/user")
-    public ResponseEntity<Collection<GroupDTO>> findGroupsForAUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String token){
-        String userId = getIdFromToken(token);
+    public ResponseEntity<Collection<GroupDTO>> findGroupsForAUser(Principal principal){
+        String userId = principal.getName();
         return ResponseEntity.ok(groupMapper.groupToGroupDTO(groupService.findGroupsWithUser(userId)));
-    }
-
-    private String getIdFromToken(String token){
-        String[] chunks = token.split("\\.");
-        Base64.Decoder decoder = Base64.getUrlDecoder();
-        String payload = new String(decoder.decode(chunks[1]));
-        String[] payloadData = payload.split(",");
-        payloadData = payloadData[6].split(":");
-        String id = payloadData[1].replace("\"", "");
-
-        return id;
     }
 }
