@@ -1,9 +1,11 @@
-FROM maven:3.8.7-amazoncorretto-17 AS maven
+#FROM maven:3.8.7-amazoncorretto-17 AS maven
+FROM maven:3.8.3-openjdk-17 AS maven
 WORKDIR /app
 COPY . .
 RUN mvn clean package -DskipTests
 
-FROM amazoncorretto:17 AS runtime
+#FROM amazoncorretto:17 AS runtime
+FROM openjdk:17 AS runtime
 WORKDIR /app
 
 ENV PORT 8080
