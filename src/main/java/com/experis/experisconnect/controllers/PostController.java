@@ -109,6 +109,18 @@ public class PostController {
         return ResponseEntity.ok(postMapper.postToPostDTO(postService.findPostsUserSubscribedTo(userId, searching, limiting, offsetting)));
     }
 
+    @GetMapping("/topic")
+    public ResponseEntity<Collection<PostDTO>> findPostInTopicUserIsSubscribedTo(@RequestHeader(HttpHeaders.AUTHORIZATION) String token){
+        String userId = getIdFromToken(token);
+        return ResponseEntity.ok(postMapper.postToPostDTO(postService.findPostsFromTopicUserIsSubscribedTo(userId)));
+    }
+
+    @GetMapping("/group")
+    public ResponseEntity<Collection<PostDTO>> findPostInGroupUserIsSubscribedTo(@RequestHeader(HttpHeaders.AUTHORIZATION) String token){
+        String userId = getIdFromToken(token);
+        return ResponseEntity.ok(postMapper.postToPostDTO(postService.findPostsFromGroupUserIsSubscribedTo(userId)));
+    }
+
     private String getIdFromToken(String token){
         String[] chunks = token.split("\\.");
         Base64.Decoder decoder = Base64.getUrlDecoder();
