@@ -29,24 +29,18 @@ public interface UsersMapper {
 
     @Named(value = "postsToPostId")
     default Set<Integer> map(Set<Post> value){
-        if(value == null)
-            return null;
         return value.stream()
                 .map(s -> s.getId())
                 .collect(Collectors.toSet());
     }
     @Named(value = "groupsToGroupsId")
     default Set<Integer> mapGroups(Set<Groups> value){
-        if(value == null)
-            return null;
         return value.stream()
                 .map(s -> s.getId())
                 .collect(Collectors.toSet());
     }
     @Named(value = "topicsToTopicsId")
     default Set<Integer> mapTopics(Set<Topic> value){
-        if(value == null)
-            return null;
         return value.stream()
                 .map(s -> s.getId())
                 .collect(Collectors.toSet());
