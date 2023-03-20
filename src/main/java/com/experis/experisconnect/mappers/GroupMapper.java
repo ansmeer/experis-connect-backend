@@ -23,8 +23,6 @@ public interface GroupMapper {
 
     @Named(value = "postsToPostId")
     default Set<Integer> map(Set<Post> value){
-        if(value == null)
-            return null;
         return value.stream()
                 .map(s -> s.getId())
                 .collect(Collectors.toSet());

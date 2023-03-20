@@ -42,7 +42,7 @@ public class PostController {
         post.setUpdatedAt(LocalDate.now().toString());
         postService.add(post);
         URI uri = URI.create("api/v1/post/" + post.getId());
-        return ResponseEntity.created(uri).build();
+        return ResponseEntity.created(uri).body(post.getId());
     }
 
     @PutMapping("{id}")

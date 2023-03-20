@@ -99,8 +99,6 @@ public abstract class PostMapper {
 
     @Named(value = "postsToPostId")
     Set<Integer> map(Set<Post> value) {
-        if (value == null)
-            return null;
         return value.stream()
                 .map(Post::getId)
                 .collect(Collectors.toSet());
