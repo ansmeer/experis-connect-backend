@@ -3,13 +3,16 @@ package com.experis.experisconnect.controllers;
 import com.experis.experisconnect.mappers.TopicMapper;
 import com.experis.experisconnect.models.Topic;
 import com.experis.experisconnect.models.Users;
+import com.experis.experisconnect.models.dto.post.PostDTO;
 import com.experis.experisconnect.models.dto.topic.TopicDTO;
 import com.experis.experisconnect.models.dto.topic.TopicPostDTO;
 import com.experis.experisconnect.models.dto.topic.TopicPutDTO;
 import com.experis.experisconnect.services.topic.TopicService;
 import com.experis.experisconnect.services.users.UsersService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpHeaders;
@@ -125,6 +128,13 @@ public class TopicController {
     }
 
     @GetMapping("/user")
+    @Operation(summary = "Get all topics for a user", tags = {"Topic", "Users", "Get"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            array = @ArraySchema(schema = @Schema(implementation = TopicDTO.class)))),
+            @ApiResponse(responseCode = "404", description = "Topics not found", content = @Content)
+    })
     public ResponseEntity<Collection<TopicDTO>> findTopicsForAUser(Principal principal){
         String userId = principal.getName();
         return ResponseEntity.ok(topicMapper.topicToTopicDTO(topicService.findTopicsWithUser(userId)));

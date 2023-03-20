@@ -124,6 +124,13 @@ public class PostController {
     }
 
     @GetMapping("/user")
+    @Operation(summary = "Get all posts from a user", tags = {"Posts", "Users", "Get"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            array = @ArraySchema(schema = @Schema(implementation = PostDTO.class)))),
+            @ApiResponse(responseCode = "404", description = "Posts not found", content = @Content)
+    })
     public ResponseEntity<Collection<PostDTO>> findAllPostsToAUser(Principal principal, @RequestParam Optional<String> search, Optional<Integer> limit, Optional<Integer> offset) {
         String userId = principal.getName();
         String searching = search.orElse("").toLowerCase();
@@ -133,6 +140,13 @@ public class PostController {
     }
 
     @GetMapping("/user/{senderId}")
+    @Operation(summary = "Get all posts from a user by its id", tags = {"Posts", "Users", "Get"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            array = @ArraySchema(schema = @Schema(implementation = PostDTO.class)))),
+            @ApiResponse(responseCode = "404", description = "Posts not found", content = @Content)
+    })
     public ResponseEntity<Collection<PostDTO>> findAllPostsToAUser(Principal principal, @PathVariable String senderId, @RequestParam Optional<String> search, Optional<Integer> limit, Optional<Integer> offset) {
         String userId = principal.getName();
         String searching = search.orElse("").toLowerCase();
@@ -142,6 +156,13 @@ public class PostController {
     }
 
     @GetMapping
+    @Operation(summary = "Get all posts a user is subscribed to", tags = {"Posts", "Users", "Get"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            array = @ArraySchema(schema = @Schema(implementation = PostDTO.class)))),
+            @ApiResponse(responseCode = "404", description = "Posts not found", content = @Content)
+    })
     public ResponseEntity<Collection<PostDTO>> findPostsUserIsSubscribedTo(Principal principal, @RequestParam Optional<String> search, Optional<Integer> limit, Optional<Integer> offset) {
         String userId = principal.getName();
         String searching = search.orElse("").toLowerCase();
@@ -151,12 +172,26 @@ public class PostController {
     }
 
     @GetMapping("/topic")
+    @Operation(summary = "Get all posts in a topic a user is subscribed to", tags = {"Posts", "Topic", "Users", "Get"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            array = @ArraySchema(schema = @Schema(implementation = PostDTO.class)))),
+            @ApiResponse(responseCode = "404", description = "Posts not found", content = @Content)
+    })
     public ResponseEntity<Collection<PostDTO>> findPostInTopicUserIsSubscribedTo(Principal principal) {
         String userId = principal.getName();
         return ResponseEntity.ok(postMapper.postToPostDTO(postService.findPostsFromTopicUserIsSubscribedTo(userId)));
     }
 
     @GetMapping("/group")
+    @Operation(summary = "Get all posts in a group a user is subscribed to", tags = {"Posts", "Group", "Users", "Get"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            array = @ArraySchema(schema = @Schema(implementation = PostDTO.class)))),
+            @ApiResponse(responseCode = "404", description = "Posts not found", content = @Content)
+    })
     public ResponseEntity<Collection<PostDTO>> findPostInGroupUserIsSubscribedTo(Principal principal) {
         String userId = principal.getName();
         return ResponseEntity.ok(postMapper.postToPostDTO(postService.findPostsFromGroupUserIsSubscribedTo(userId)));

@@ -6,6 +6,7 @@ import com.experis.experisconnect.models.Users;
 import com.experis.experisconnect.models.dto.group.GroupDTO;
 import com.experis.experisconnect.models.dto.group.GroupPostDTO;
 import com.experis.experisconnect.models.dto.group.GroupPutDTO;
+import com.experis.experisconnect.models.dto.post.PostDTO;
 import com.experis.experisconnect.services.group.GroupService;
 import com.experis.experisconnect.services.users.UsersService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -129,6 +130,13 @@ public class GroupController {
     }
 
     @GetMapping("/user")
+    @Operation(summary = "Get all groups for a user", tags = {"Group", "Users", "Get"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            array = @ArraySchema(schema = @Schema(implementation = GroupDTO.class)))),
+            @ApiResponse(responseCode = "404", description = "Groups not found", content = @Content)
+    })
     public ResponseEntity<Collection<GroupDTO>> findGroupsForAUser(Principal principal){
         String userId = principal.getName();
         return ResponseEntity.ok(groupMapper.groupToGroupDTO(groupService.findGroupsWithUser(userId)));
