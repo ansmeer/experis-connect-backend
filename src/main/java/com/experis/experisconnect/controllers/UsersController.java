@@ -18,6 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.Base64;
 
@@ -54,9 +55,9 @@ public class UsersController {
                     content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             array = @ArraySchema(schema = @Schema(implementation = UsersDTO.class)))})
     })
-    public ResponseEntity<UsersDTO> findCurrentUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String token){
+    public ResponseEntity<UsersDTO> findCurrentUser(Principal principal){
         // TODO Make this 303 See Other
-        String id = getIdFromToken(token);
+        String id = principal.getName();
         return ResponseEntity.ok(usersMapper.usersToUsersDTO(usersService.findById(id)));
     }
 
@@ -65,8 +66,8 @@ public class UsersController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Created", content = @Content)
     })
-    public ResponseEntity<UsersDTO> add(@RequestHeader(HttpHeaders.AUTHORIZATION) String token){
-        String id = getIdFromToken(token);
+    public ResponseEntity<UsersDTO> add(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, Principal principal){
+        String id = principal.getName();
         String name = getNameFromToken(token);
 
         Users user = new Users();
@@ -97,17 +98,6 @@ public class UsersController {
         users.setUpdatedAt(LocalDate.now().toString());
         usersService.update(users);
         return ResponseEntity.ok(usersMapper.usersToUsersDTO(usersService.findById(id)));
-    }
-
-    private String getIdFromToken(String token){
-        String[] chunks = token.split("\\.");
-        Base64.Decoder decoder = Base64.getUrlDecoder();
-        String payload = new String(decoder.decode(chunks[1]));
-        String[] payloadData = payload.split(",");
-        payloadData = payloadData[6].split(":");
-        String id = payloadData[1].replace("\"", "");
-
-        return id;
     }
 
     private String getNameFromToken(String token){

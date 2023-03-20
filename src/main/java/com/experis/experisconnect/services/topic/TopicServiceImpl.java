@@ -64,4 +64,9 @@ public class TopicServiceImpl implements TopicService{
         // topicService.findById(id).getUsers().add(usersService.findById(userId));
 
     }
+
+    @Override
+    public Set<Topic> findTopicsWithUser(String userId) {
+        return topicRepository.findTopicsAUserIsIn(userId);
+    }
 }

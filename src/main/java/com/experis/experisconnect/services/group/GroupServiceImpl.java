@@ -50,8 +50,8 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Set<Groups> searchResultsWithLimitOffset(String search, int offset, int limit) {
-        return groupRepository.findTopicsByNameWithLimitOffset(search, limit, offset);
+    public Set<Groups> searchResultsWithLimitOffset(String userId, String search, int offset, int limit) {
+        return groupRepository.findGroupsByNameWithLimitOffset(userId, search, limit, offset);
     }
 
     @Override
@@ -60,5 +60,20 @@ public class GroupServiceImpl implements GroupService {
         group.getUsers().add(usersRepository.findById(userId).get());
 
         return groupRepository.save(group);
+    }
+
+    @Override
+    public Set<Groups> findGroupsWithUser(String userId) {
+        return groupRepository.findGroupsAUserIsIn(userId);
+    }
+
+    @Override
+    public Groups findByIdWhereUserHasAccess(String userId, int groupId) {
+        return groupRepository.findGroupByIdIfUserHasAccess(userId, groupId);
+    }
+
+    @Override
+    public boolean checkIfUserInGroup(String userId, int groupId) {
+        return groupRepository.checkIfUserIsInGroup(userId, groupId);
     }
 }

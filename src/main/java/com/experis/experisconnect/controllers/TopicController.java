@@ -3,6 +3,7 @@ package com.experis.experisconnect.controllers;
 import com.experis.experisconnect.mappers.TopicMapper;
 import com.experis.experisconnect.models.Topic;
 import com.experis.experisconnect.models.Users;
+import com.experis.experisconnect.models.dto.topic.TopicDTO;
 import com.experis.experisconnect.models.dto.topic.TopicPostDTO;
 import com.experis.experisconnect.models.dto.topic.TopicPutDTO;
 import com.experis.experisconnect.services.topic.TopicService;
@@ -18,11 +19,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.security.Principal;
 import java.time.LocalDate;
-import java.util.Base64;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @CrossOrigin(origins = {"http://localhost:5173", "https://experis-connect.vercel.app"}, maxAge = 3600)
     // TODO move origins to environment variables
@@ -47,7 +46,7 @@ public class TopicController {
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
             @ApiResponse(responseCode = "404", description = "Topic not found", content = @Content)
     })
-    public ResponseEntity findById(@PathVariable int id){
+    public ResponseEntity<TopicDTO> findById(@PathVariable int id){
         return ResponseEntity.ok(topicMapper.topicToTopicDTO(topicService.findById(id)));
     }
 
@@ -57,7 +56,7 @@ public class TopicController {
             @ApiResponse(responseCode = "200", description = "Success",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
     })
-    public ResponseEntity findAll(@RequestParam Optional<String> search, Optional<Integer> limit, Optional<Integer> offset){
+    public ResponseEntity<Collection<TopicDTO>> findAll(@RequestParam Optional<String> search, Optional<Integer> limit, Optional<Integer> offset){
         return ResponseEntity.ok(topicMapper.topicToTopicDTO(
                 topicService.searchResultsWithLimitOffset(search.orElse("").toLowerCase(), offset.orElse(0), limit.orElse(99999999))));
     }
@@ -67,9 +66,9 @@ public class TopicController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Created", content = @Content)
     })
-    public ResponseEntity add(@RequestBody TopicPostDTO entity, @RequestHeader(HttpHeaders.AUTHORIZATION) String token){
+    public ResponseEntity<Object> add(@RequestBody TopicPostDTO entity, Principal principal){
         Topic topic = topicMapper.topicPostDTOToTopic(entity);
-        String id = getIdFromToken(token);
+        String id = principal.getName();
         Set<Users> user = new HashSet<>();
         user.add(usersService.findById(id));
         topic.setUsers(user);
@@ -88,7 +87,7 @@ public class TopicController {
             @ApiResponse(responseCode = "400", description = "Bad request, URI does not match request body", content = @Content),
             @ApiResponse(responseCode = "404", description = "Topic not found", content = @Content)
     })
-    public ResponseEntity update(@RequestBody TopicPutDTO entity, @PathVariable int id){
+    public ResponseEntity<Object> update(@RequestBody TopicPutDTO entity, @PathVariable int id){
         if(!topicService.exists(id))
             return ResponseEntity.badRequest().build();
 
@@ -106,7 +105,7 @@ public class TopicController {
             @ApiResponse(responseCode = "204", description = "Topic deleted", content = @Content),
             @ApiResponse(responseCode = "404", description = "Topic not found", content = @Content)
     })
-    public ResponseEntity deleteById(@PathVariable int id){
+    public ResponseEntity<Object> deleteById(@PathVariable int id){
         topicService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
@@ -117,22 +116,17 @@ public class TopicController {
             @ApiResponse(responseCode = "201", description = "Created", content = @Content),
             @ApiResponse(responseCode = "404", description = "Topic not found", content = @Content)
     })
-    public ResponseEntity<Object> addUserToTopic(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable int id){
+    public ResponseEntity<Object> addUserToTopic(Principal principal, @PathVariable int id){
         if(!topicService.exists(id))
             return ResponseEntity.badRequest().build();
-        String userId = getIdFromToken(token);
+        String userId = principal.getName();
         topicService.addUserToTopic(userId, id);
         return ResponseEntity.noContent().build();
     }
 
-    private String getIdFromToken(String token){
-        String[] chunks = token.split("\\.");
-        Base64.Decoder decoder = Base64.getUrlDecoder();
-        String payload = new String(decoder.decode(chunks[1]));
-        String[] payloadData = payload.split(",");
-        payloadData = payloadData[6].split(":");
-        String id = payloadData[1].replace("\"", "");
-
-        return id;
+    @GetMapping("/user")
+    public ResponseEntity<Collection<TopicDTO>> findTopicsForAUser(Principal principal){
+        String userId = principal.getName();
+        return ResponseEntity.ok(topicMapper.topicToTopicDTO(topicService.findTopicsWithUser(userId)));
     }
 }
