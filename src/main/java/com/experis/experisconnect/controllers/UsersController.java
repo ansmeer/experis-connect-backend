@@ -3,6 +3,7 @@ package com.experis.experisconnect.controllers;
 import com.experis.experisconnect.mappers.UsersMapper;
 import com.experis.experisconnect.models.Users;
 import com.experis.experisconnect.models.dto.users.UsersDTO;
+import com.experis.experisconnect.models.dto.users.UsersMiniDTO;
 import com.experis.experisconnect.models.dto.users.UsersPutDTO;
 import com.experis.experisconnect.services.users.UsersService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,6 +22,7 @@ import java.net.URI;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.Base64;
+import java.util.Collection;
 
 @CrossOrigin(origins = {"http://localhost:5173", "https://experis-connect.vercel.app"}, maxAge = 3600)
     // TODO move origins to environment variables
@@ -46,6 +48,10 @@ public class UsersController {
     })
     public ResponseEntity<UsersDTO> findById(@PathVariable String id){
         return ResponseEntity.ok(usersMapper.usersToUsersDTO(usersService.findById(id)));
+    }
+    @GetMapping("/list")
+    public ResponseEntity<Collection<UsersMiniDTO>> findAll(){
+        return ResponseEntity.ok(usersMapper.usersToUsersMiniDTO(usersService.findAll()));
     }
 
     @GetMapping

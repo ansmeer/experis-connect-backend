@@ -5,6 +5,7 @@ import com.experis.experisconnect.models.Post;
 import com.experis.experisconnect.models.Topic;
 import com.experis.experisconnect.models.Users;
 import com.experis.experisconnect.models.dto.users.UsersDTO;
+import com.experis.experisconnect.models.dto.users.UsersMiniDTO;
 import com.experis.experisconnect.models.dto.users.UsersPostDTO;
 import com.experis.experisconnect.models.dto.users.UsersPutDTO;
 import org.mapstruct.Mapper;
@@ -24,6 +25,8 @@ public interface UsersMapper {
     @Mapping(target = "topics", qualifiedByName = "topicsToTopicsId")
     UsersDTO usersToUsersDTO(Users users);
     Collection<UsersDTO> usersToUsersDTO(Collection<Users> users);
+    UsersMiniDTO usersToUsersMiniDTO(Users users);
+    Collection<UsersMiniDTO> usersToUsersMiniDTO(Collection<Users> users);
     Users usersPutDTOToUsers(UsersPutDTO usersPutDTO);
     Users usersPostDTOToUsers(UsersPostDTO usersPostDTO);
 
