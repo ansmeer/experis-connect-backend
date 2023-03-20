@@ -1,11 +1,13 @@
 package com.experis.experisconnect.controllers;
 
 import com.experis.experisconnect.mappers.TopicMapper;
+import com.experis.experisconnect.mappers.UsersMapper;
 import com.experis.experisconnect.models.Topic;
 import com.experis.experisconnect.models.Users;
 import com.experis.experisconnect.models.dto.topic.TopicDTO;
 import com.experis.experisconnect.models.dto.topic.TopicPostDTO;
 import com.experis.experisconnect.models.dto.topic.TopicPutDTO;
+import com.experis.experisconnect.models.dto.users.UsersDTO;
 import com.experis.experisconnect.services.topic.TopicService;
 import com.experis.experisconnect.services.users.UsersService;
 import org.springframework.http.ResponseEntity;
@@ -26,11 +28,13 @@ public class TopicController {
     private final TopicService topicService;
     private final TopicMapper topicMapper;
     private final UsersService usersService;
+    private final UsersMapper usersMapper;
 
-    public TopicController(TopicService topicService, TopicMapper topicMapper, UsersService usersService) {
+    public TopicController(TopicService topicService, TopicMapper topicMapper, UsersService usersService, UsersMapper usersMapper) {
         this.topicService = topicService;
         this.topicMapper = topicMapper;
         this.usersService = usersService;
+        this.usersMapper = usersMapper;
     }
 
     @GetMapping("{id}")
@@ -91,5 +95,11 @@ public class TopicController {
     public ResponseEntity<Collection<TopicDTO>> findTopicsForAUser(Principal principal){
         String userId = principal.getName();
         return ResponseEntity.ok(topicMapper.topicToTopicDTO(topicService.findTopicsWithUser(userId)));
+    }
+
+    @GetMapping("/{id}/user/list")
+    public ResponseEntity<Collection<UsersDTO>> findMembersOfTopic(@PathVariable int id){
+        Topic topic = topicService.findById(id);
+        return ResponseEntity.ok(usersMapper.usersToUsersDTO(topic.getUsers()));
     }
 }

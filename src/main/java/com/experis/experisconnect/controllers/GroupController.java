@@ -1,14 +1,15 @@
 package com.experis.experisconnect.controllers;
 
 import com.experis.experisconnect.mappers.GroupMapper;
+import com.experis.experisconnect.mappers.UsersMapper;
 import com.experis.experisconnect.models.Groups;
 import com.experis.experisconnect.models.Users;
 import com.experis.experisconnect.models.dto.group.GroupDTO;
 import com.experis.experisconnect.models.dto.group.GroupPostDTO;
 import com.experis.experisconnect.models.dto.group.GroupPutDTO;
+import com.experis.experisconnect.models.dto.users.UsersDTO;
 import com.experis.experisconnect.services.group.GroupService;
 import com.experis.experisconnect.services.users.UsersService;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,11 +29,13 @@ public class GroupController {
     private final GroupService groupService;
     private final GroupMapper groupMapper;
     private final UsersService usersService;
+    private final UsersMapper usersMapper;
 
-    public GroupController(GroupService groupService, GroupMapper groupMapper, UsersService usersService) {
+    public GroupController(GroupService groupService, GroupMapper groupMapper, UsersService usersService, UsersMapper usersMapper) {
         this.groupService = groupService;
         this.groupMapper = groupMapper;
         this.usersService = usersService;
+        this.usersMapper = usersMapper;
     }
 
     @GetMapping("{id}")
@@ -98,5 +101,11 @@ public class GroupController {
     public ResponseEntity<Collection<GroupDTO>> findGroupsForAUser(Principal principal){
         String userId = principal.getName();
         return ResponseEntity.ok(groupMapper.groupToGroupDTO(groupService.findGroupsWithUser(userId)));
+    }
+
+    @GetMapping("{id}/user/list")
+    public ResponseEntity<Collection<UsersDTO>> findAllMembers(@PathVariable int id){
+        Groups groups = groupService.findById(id);
+        return ResponseEntity.ok(usersMapper.usersToUsersDTO(groups.getUsers()));
     }
 }
