@@ -143,7 +143,7 @@ public class GroupController {
             @ApiResponse(responseCode = "200", description = "Success",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             array = @ArraySchema(schema = @Schema(implementation = GroupDTO.class)))),
-            @ApiResponse(responseCode = "404", description = "Groups not found", content = @Content)
+            @ApiResponse(responseCode = "404", description = "Group not found", content = @Content)
     })
     public ResponseEntity<Collection<GroupDTO>> findGroupsForAUser(Principal principal){
         String userId = principal.getName();
@@ -151,6 +151,13 @@ public class GroupController {
     }
 
     @GetMapping("{id}/user/list")
+    @Operation(summary = "Get all users in a group", tags = {"Group", "Users", "Get"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            array = @ArraySchema(schema = @Schema(implementation = UsersDTO.class)))),
+            @ApiResponse(responseCode = "404", description = "Group not found", content = @Content)
+    })
     public ResponseEntity<Collection<UsersDTO>> findAllMembers(@PathVariable int id){
         Groups groups = groupService.findById(id);
         return ResponseEntity.ok(usersMapper.usersToUsersDTO(groups.getUsers()));

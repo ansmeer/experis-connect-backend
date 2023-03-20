@@ -50,6 +50,12 @@ public class UsersController {
         return ResponseEntity.ok(usersMapper.usersToUsersDTO(usersService.findById(id)));
     }
     @GetMapping("/list")
+    @Operation(summary = "Get all user summaries", tags = {"Users", "Get"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            array = @ArraySchema(schema = @Schema(implementation = UsersMiniDTO.class)))})
+    })
     public ResponseEntity<Collection<UsersMiniDTO>> findAll(){
         return ResponseEntity.ok(usersMapper.usersToUsersMiniDTO(usersService.findAll()));
     }
@@ -112,7 +118,7 @@ public class UsersController {
         String payload = new String(decoder.decode(chunks[1]));
         String[] payloadData = payload.split(",");
         System.out.println(payloadData[23]);
-        String payloadName[] = payloadData[23].split(":");
+        String[] payloadName = payloadData[23].split(":");
         return payloadName[1].replace("\"", "");
     }
 }

@@ -4,21 +4,12 @@ import com.experis.experisconnect.mappers.TopicMapper;
 import com.experis.experisconnect.mappers.UsersMapper;
 import com.experis.experisconnect.models.Topic;
 import com.experis.experisconnect.models.Users;
-import com.experis.experisconnect.models.dto.post.PostDTO;
 import com.experis.experisconnect.models.dto.topic.TopicDTO;
 import com.experis.experisconnect.models.dto.topic.TopicPostDTO;
 import com.experis.experisconnect.models.dto.topic.TopicPutDTO;
 import com.experis.experisconnect.models.dto.users.UsersDTO;
 import com.experis.experisconnect.services.topic.TopicService;
 import com.experis.experisconnect.services.users.UsersService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -152,6 +143,13 @@ public class TopicController {
     }
 
     @GetMapping("/{id}/user/list")
+    @Operation(summary = "Get all users in a topic", tags = {"Topic", "Users", "Get"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            array = @ArraySchema(schema = @Schema(implementation = UsersDTO.class)))),
+            @ApiResponse(responseCode = "404", description = "Topic not found", content = @Content)
+    })
     public ResponseEntity<Collection<UsersDTO>> findMembersOfTopic(@PathVariable int id){
         Topic topic = topicService.findById(id);
         return ResponseEntity.ok(usersMapper.usersToUsersDTO(topic.getUsers()));
