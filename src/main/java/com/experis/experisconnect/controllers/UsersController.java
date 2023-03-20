@@ -6,7 +6,14 @@ import com.experis.experisconnect.models.dto.users.UsersDTO;
 import com.experis.experisconnect.models.dto.users.UsersMiniDTO;
 import com.experis.experisconnect.models.dto.users.UsersPutDTO;
 import com.experis.experisconnect.services.users.UsersService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +39,13 @@ public class UsersController {
     }
 
     @GetMapping("{id}")
+    @Operation(summary = "Get a user by its id", tags = {"Users", "Get"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = UsersDTO.class))),
+            @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
+    })
     public ResponseEntity<UsersDTO> findById(@PathVariable String id){
         return ResponseEntity.ok(usersMapper.usersToUsersDTO(usersService.findById(id)));
     }
@@ -41,6 +55,12 @@ public class UsersController {
     }
 
     @GetMapping
+    @Operation(summary = "Get all users", tags = {"Users", "Get"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            array = @ArraySchema(schema = @Schema(implementation = UsersDTO.class)))})
+    })
     public ResponseEntity<UsersDTO> findCurrentUser(Principal principal){
         // TODO Make this 303 See Other
         String id = principal.getName();
@@ -48,6 +68,10 @@ public class UsersController {
     }
 
     @PostMapping
+    @Operation(summary = "Add a user", tags = {"Users", "Post"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Created", content = @Content)
+    })
     public ResponseEntity<UsersDTO> add(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, Principal principal){
         String id = principal.getName();
         String name = getNameFromToken(token);
@@ -64,6 +88,12 @@ public class UsersController {
     }
 
     @PutMapping("{id}")
+    @Operation(summary = "Update a user", tags = {"Users", "Put"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "User updated", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Bad request, URI does not match request body", content = @Content),
+            @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
+    })
     public ResponseEntity<UsersDTO> update(@RequestBody UsersPutDTO entity, @PathVariable String id){
         if(!usersService.exists(id))
             return ResponseEntity.badRequest().build();
