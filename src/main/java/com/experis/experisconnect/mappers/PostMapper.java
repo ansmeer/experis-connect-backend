@@ -4,9 +4,11 @@ import com.experis.experisconnect.models.Groups;
 import com.experis.experisconnect.models.Post;
 import com.experis.experisconnect.models.Topic;
 import com.experis.experisconnect.models.Users;
+import com.experis.experisconnect.models.dto.group.GroupMiniDTO;
 import com.experis.experisconnect.models.dto.post.PostDTO;
 import com.experis.experisconnect.models.dto.post.PostPostDTO;
 import com.experis.experisconnect.models.dto.post.PostPutDTO;
+import com.experis.experisconnect.models.dto.topic.TopicMiniDTO;
 import com.experis.experisconnect.models.dto.users.SenderDTO;
 import com.experis.experisconnect.services.group.GroupService;
 import com.experis.experisconnect.services.post.PostService;
@@ -31,8 +33,8 @@ public abstract class PostMapper {
     @Autowired
     protected PostService postService;
 
-    @Mapping(target = "targetGroup", source = "targetGroup.id")
-    @Mapping(target = "targetTopic", source = "targetTopic.id")
+    @Mapping(target = "targetGroup", source = "targetGroup", qualifiedByName = "groupToMiniDTO")
+    @Mapping(target = "targetTopic", source = "targetTopic", qualifiedByName = "topicToMiniDTO")
     @Mapping(target = "targetUser", source = "targetUser.id")
     @Mapping(target = "senderId", source = "senderId", qualifiedByName = "userToSenderDTO")
     @Mapping(target = "replyParentId", source = "replyParentId.id")
@@ -59,6 +61,26 @@ public abstract class PostMapper {
         sender.setName(value.getName());
         sender.setPicture(value.getPicture());
         return sender;
+    }
+
+    @Named(value = "groupToMiniDTO")
+    GroupMiniDTO mapMiniGroup(Groups group){
+        if(group == null)
+            return null;
+        GroupMiniDTO miniGroup = new GroupMiniDTO();
+        miniGroup.setId(group.getId());
+        miniGroup.setName((group.getName()));
+        return miniGroup;
+    }
+
+    @Named(value = "topicToMiniDTO")
+    TopicMiniDTO mapMiniTopic(Topic topic){
+        if (topic == null)
+            return null;
+        TopicMiniDTO miniTopic = new TopicMiniDTO();
+        miniTopic.setId(topic.getId());
+        miniTopic.setName(topic.getName());
+        return miniTopic;
     }
 
     @Named(value = "userIdToUser")

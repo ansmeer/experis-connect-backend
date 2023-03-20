@@ -1,5 +1,7 @@
 package com.experis.experisconnect.models.dto.post;
 
+import com.experis.experisconnect.models.dto.group.GroupMiniDTO;
+import com.experis.experisconnect.models.dto.topic.TopicMiniDTO;
 import com.experis.experisconnect.models.dto.users.SenderDTO;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +21,6 @@ public class PostDTO {
     private int replyParentId;
     private Set<Integer> replies;
     private String targetUser;
-    private int targetGroup;
-    private int targetTopic;
+    private GroupMiniDTO targetGroup;
+    private TopicMiniDTO targetTopic;
 }
