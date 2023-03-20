@@ -10,7 +10,14 @@ import com.experis.experisconnect.models.dto.group.GroupPutDTO;
 import com.experis.experisconnect.models.dto.users.UsersDTO;
 import com.experis.experisconnect.services.group.GroupService;
 import com.experis.experisconnect.services.users.UsersService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -39,15 +46,30 @@ public class GroupController {
     }
 
     @GetMapping("{id}")
+    @Operation(summary = "Get a group by its id", tags = {"Group", "Get"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = GroupDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Group not found", content = @Content)
+    })
     public ResponseEntity<GroupDTO> findById(Principal principal, @PathVariable int id){
+        if(!groupService.exists(id))
+            return ResponseEntity.notFound().build();
         String userId = principal.getName();
         GroupDTO group = groupMapper.groupToGroupDTO(groupService.findByIdWhereUserHasAccess(userId, id));
         if(group == null)
-            return new ResponseEntity("This group is private or does not exist", HttpStatus.FORBIDDEN);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         return ResponseEntity.ok(group);
     }
 
     @GetMapping
+    @Operation(summary = "Get all groups", tags = {"Group", "Get"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            array = @ArraySchema(schema = @Schema(implementation = GroupDTO.class)))})
+    })
     public ResponseEntity<Collection<GroupDTO>> findAll(Principal principal, @RequestParam Optional<String> search, Optional<Integer> limit, Optional<Integer> offset){
         String userId = principal.getName();
         return ResponseEntity.ok(groupMapper.groupToGroupDTO(
@@ -55,6 +77,10 @@ public class GroupController {
     }
 
     @PostMapping
+    @Operation(summary = "Add a group", tags = {"Group", "Post"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Created", content = @Content)
+    })
     public ResponseEntity<Object> add(@RequestBody GroupPostDTO entity, Principal principal){
         Groups group = groupMapper.groupPostDTOToGroup(entity);
         String id = principal.getName();
@@ -68,18 +94,32 @@ public class GroupController {
         return ResponseEntity.created(uri).build();
     }
     @PutMapping("{id}")
-    public ResponseEntity<Object> update(@RequestBody GroupPutDTO entity, @PathVariable int id){
+    @Operation(summary = "Update a group", tags = {"Group", "Put"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Group updated", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Bad request, URI does not match request body", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Group not found", content = @Content)
+    })
+    public ResponseEntity<Object> update(Principal principal, @RequestBody GroupPutDTO entity, @PathVariable int id){
         if(!groupService.exists(id))
             return ResponseEntity.badRequest().build();
-
+        if(!groupService.checkIfUserInGroup(principal.getName(), id))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         Groups group = groupMapper.groupPutDTOToGroup(entity);
+        Groups oldGroup = groupService.findById(id);
         group.setId(id);
-        group.setCreatedAt(groupService.findById(id).getCreatedAt());
+        group.setCreatedAt(oldGroup.getCreatedAt());
         group.setUpdatedAt(LocalDate.now().toString());
+        group.setUsers(oldGroup.getUsers());
         groupService.update(group);
         return ResponseEntity.noContent().build();
     }
     @PostMapping("{id}/join")
+    @Operation(summary = "Add a user to a group", tags = {"Group", "Users", "Post"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Created", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Forbidden", content = @Content)
+    })
     public ResponseEntity<Object> addUserToGroup(Principal principal, @PathVariable int id, @RequestParam Optional<String> user){
         if (!groupService.exists(id))
             return ResponseEntity.badRequest().build();
@@ -87,7 +127,7 @@ public class GroupController {
         boolean privateGroup = groupService.findById(id).isPrivate();
         if(privateGroup) {
             if (!groupService.checkIfUserInGroup(principal.getName(), id))
-                return new ResponseEntity<>("This is a private group. To join, request access from a member", HttpStatus.FORBIDDEN);
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         String userId= user.orElse("");
         if(userId.equals("")) {
@@ -98,6 +138,13 @@ public class GroupController {
     }
 
     @GetMapping("/user")
+    @Operation(summary = "Get all groups for a user", tags = {"Group", "Users", "Get"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            array = @ArraySchema(schema = @Schema(implementation = GroupDTO.class)))),
+            @ApiResponse(responseCode = "404", description = "Groups not found", content = @Content)
+    })
     public ResponseEntity<Collection<GroupDTO>> findGroupsForAUser(Principal principal){
         String userId = principal.getName();
         return ResponseEntity.ok(groupMapper.groupToGroupDTO(groupService.findGroupsWithUser(userId)));
