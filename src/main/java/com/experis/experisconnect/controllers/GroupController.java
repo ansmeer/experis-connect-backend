@@ -37,10 +37,12 @@ public class GroupController {
 
     @GetMapping("{id}")
     public ResponseEntity<GroupDTO> findById(Principal principal, @PathVariable int id){
+        if(!groupService.exists(id))
+            return ResponseEntity.notFound().build();
         String userId = principal.getName();
         GroupDTO group = groupMapper.groupToGroupDTO(groupService.findByIdWhereUserHasAccess(userId, id));
         if(group == null)
-            return new ResponseEntity("This group is private or does not exist", HttpStatus.FORBIDDEN);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         return ResponseEntity.ok(group);
     }
 
@@ -65,14 +67,17 @@ public class GroupController {
         return ResponseEntity.created(uri).build();
     }
     @PutMapping("{id}")
-    public ResponseEntity<Object> update(@RequestBody GroupPutDTO entity, @PathVariable int id){
+    public ResponseEntity<Object> update(Principal principal, @RequestBody GroupPutDTO entity, @PathVariable int id){
         if(!groupService.exists(id))
             return ResponseEntity.badRequest().build();
-
+        if(!groupService.checkIfUserInGroup(principal.getName(), id))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         Groups group = groupMapper.groupPutDTOToGroup(entity);
+        Groups oldGroup = groupService.findById(id);
         group.setId(id);
-        group.setCreatedAt(groupService.findById(id).getCreatedAt());
+        group.setCreatedAt(oldGroup.getCreatedAt());
         group.setUpdatedAt(LocalDate.now().toString());
+        group.setUsers(oldGroup.getUsers());
         groupService.update(group);
         return ResponseEntity.noContent().build();
     }
@@ -84,7 +89,7 @@ public class GroupController {
         boolean privateGroup = groupService.findById(id).isPrivate();
         if(privateGroup) {
             if (!groupService.checkIfUserInGroup(principal.getName(), id))
-                return new ResponseEntity<>("This is a private group. To join, request access from a member", HttpStatus.FORBIDDEN);
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         String userId= user.orElse("");
         if(userId.equals("")) {
