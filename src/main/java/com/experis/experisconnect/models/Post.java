@@ -19,7 +19,7 @@ public class Post {
     private String updatedAt;
     @Column
     private String title;
-    @Column
+    @Column(length = 4000)
     private String content;
     @Column(name = "post_target")
     private String postTarget;

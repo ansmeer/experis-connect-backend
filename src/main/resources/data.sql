@@ -24,7 +24,7 @@ VALUES ('2022-01-02', '2022-02-03', 'Programming', 'NEEEEEEEEEERD!', 'black');
 
 -- Group Test Data
 INSERT INTO Groups (created_at, updated_at, name, description, color, is_private)
-VALUES ('2022-01-01', '2022-02-02', 'Key Pushers', 'The WoW Dungeon Divers', 'pink', false);
+VALUES ('2022-01-01', '2022-02-02', 'Key Pushers', 'The WoW Dungeon Divers', 'pink', true);
 INSERT INTO Groups (created_at, updated_at, name, description, color, is_private)
 VALUES ('2022-01-01', '2022-02-02', 'Key Pushers 2', 'The WoW Dungeon Divers', 'pink', false);
 INSERT INTO Groups (created_at, updated_at, name, description, color, is_private)
@@ -39,22 +39,22 @@ VALUES ('2022-01-01', '2022-02-02', 'The Giga Chads', 'Dont join unless you can 
 
 -- Post Test Data
 INSERT INTO Post (created_at, updated_at, title, content, post_target, owner_id, group_id)
-VALUES ('2022-01-01', '2022-02-02', 'First post', 'Going for 22s! I got an SBG key, FREE!', 'TOPIC',
+VALUES ('2022-01-01', '2022-02-02', 'First post', 'Going for 22s! I got an SBG key, FREE!', 'GROUP',
         'fda39db5-429a-4d95-8a39-1aa1fb9f3249', 1);
 INSERT INTO Post (created_at, updated_at, title, content, post_target, owner_id, group_id, parent_id)
-VALUES ('2022-01-01', '2022-02-02', 'Reply to first post', 'Going for 22s! I got an SBG key, FREE!', 'TOPIC',
+VALUES ('2022-01-01', '2022-02-02', 'Reply to first post', 'Going for 22s! I got an SBG key, FREE!', 'GROUP',
         'fda39db5-429a-4d95-8a39-1aa1fb9f3249', 1, 1);
 INSERT INTO Post (created_at, updated_at, title, content, post_target, owner_id, group_id, parent_id)
-VALUES ('2022-01-01', '2022-02-02', 'Another reply to first post', 'Going for 22s! I got an SBG key, FREE!', 'TOPIC',
+VALUES ('2022-01-01', '2022-02-02', 'Another reply to first post', 'Going for 22s! I got an SBG key, FREE!', 'GROUP',
         'fda39db5-429a-4d95-8a39-1aa1fb9f3249', 1, 1);
 INSERT INTO Post (created_at, updated_at, title, content, post_target, owner_id, group_id, parent_id)
-VALUES ('2022-01-01', '2022-02-02', 'Wow, first post is popular', 'Going for 22s! I got an SBG key, FREE!', 'TOPIC',
+VALUES ('2022-01-01', '2022-02-02', 'Wow, first post is popular', 'Going for 22s! I got an SBG key, FREE!', 'GROUP',
         'fda39db5-429a-4d95-8a39-1aa1fb9f3249', 1, 1);
 INSERT INTO Post (created_at, updated_at, title, content, post_target, owner_id, group_id, parent_id)
-VALUES ('2022-01-01', '2022-02-02', 'The reply got a reply :)', 'Going for 22s! I got an SBG key, FREE!', 'TOPIC',
+VALUES ('2022-01-01', '2022-02-02', 'The reply got a reply :)', 'Going for 22s! I got an SBG key, FREE!', 'GROUP',
         'fda39db5-429a-4d95-8a39-1aa1fb9f3249', 1, 2);
 INSERT INTO Post (created_at, updated_at, title, content, post_target, owner_id, group_id, parent_id)
-VALUES ('2022-01-01', '2022-02-02', 'Reply inception', 'Going for 22s! I got an SBG key, FREE!', 'TOPIC',
+VALUES ('2022-01-01', '2022-02-02', 'Reply inception', 'Going for 22s! I got an SBG key, FREE!', 'GROUP',
         'fda39db5-429a-4d95-8a39-1aa1fb9f3249', 1, 5);
 
 INSERT INTO Post (created_at, updated_at, title, content, post_target, owner_id, group_id)
@@ -83,6 +83,15 @@ INSERT INTO post (created_at, updated_at, title, content, post_target, owner_id,
 VALUES ('2022-01-01', '2022-02-02', 'What is going on?!',
         'It has been 3 weeks since last episode! The quality is subpar anyways and that will not change so how dare they delay it..,',
         'TOPIC', '78ee330e-f8b3-48b8-8443-06583a0742fa', 2);
+INSERT INTO Post (created_at, updated_at, title, content, post_target, owner_id, users_id)
+VALUES ('2022-01-01', '2022-02-02', 'Join a dungeon?', 'Hey! I am about to log on WoW. Want to join for a few runs?', 'USER',
+        'b1af30bd-0f25-4bf1-b001-cc6a8babe84d', '78ee330e-f8b3-48b8-8443-06583a0742fa');
+INSERT INTO Post (created_at, updated_at, title, content, post_target, owner_id, users_id)
+VALUES ('2022-01-02', '2022-02-03', 'You there?', 'Hey! Have you stopped using this app? You havent responded in a while so a bit worried :(', 'USER',
+        'b1af30bd-0f25-4bf1-b001-cc6a8babe84d', '78ee330e-f8b3-48b8-8443-06583a0742fa');
+INSERT INTO Post (created_at, updated_at, title, content, post_target, owner_id, users_id)
+VALUES ('2022-01-02', '2022-02-03', 'How are you doing?', 'What is up? I just joined this app and noticed you were here too!', 'USER',
+        'fda39db5-429a-4d95-8a39-1aa1fb9f3249', '78ee330e-f8b3-48b8-8443-06583a0742fa');
 
 -- Users in Groups Data
 INSERT INTO group_user("groups_id", "users_id")
