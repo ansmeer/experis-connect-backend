@@ -133,6 +133,22 @@ public class GroupController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("{id}/leave")
+    @Operation(summary = "Remove a user from a group", tags = {"Group", "Users"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Group updated", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Bad request, URI does not match request body", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Group not found", content = @Content)
+    })
+    public ResponseEntity<Object> removeUserFromGroup(Principal principal, @PathVariable int id){
+        if (!groupService.exists(id))
+            return ResponseEntity.badRequest().build();
+
+        String userId = principal.getName();
+        groupService.removeUserFromGroup(userId, id);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/user")
     @Operation(summary = "Get all groups for a user", tags = {"Group", "Users", "Get"})
     @ApiResponses(value = {
