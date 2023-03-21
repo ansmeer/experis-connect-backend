@@ -63,6 +63,16 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    public Groups removeUserFromGroup(String userId, int groupId) {
+        Groups group = groupRepository.findById(groupId).orElseThrow(() -> new GroupNotFoundException(groupId));
+        boolean executed = group.getUsers().remove(usersRepository.findById(userId).get());
+        if(!executed)
+            return group;
+
+        return groupRepository.save(group);
+    }
+
+    @Override
     public Set<Groups> findGroupsWithUser(String userId) {
         return groupRepository.findGroupsAUserIsIn(userId);
     }

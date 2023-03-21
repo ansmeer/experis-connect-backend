@@ -9,8 +9,8 @@ import java.util.Set;
 @Setter
 public class UsersDTO {
     private String id;
-    private String createdAt;
-    private String updatedAt;
+    private java.time.ZonedDateTime createdAt;
+    private java.time.ZonedDateTime updatedAt;
     private String name;
     private String picture;
     private String status;

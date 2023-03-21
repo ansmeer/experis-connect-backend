@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.security.Principal;
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -56,8 +55,6 @@ public class PostController {
     })
     public ResponseEntity<Object> add(@RequestBody PostPostDTO entity) {
         Post post = postMapper.postPostDTOToPost(entity);
-        post.setCreatedAt(LocalDate.now().toString());
-        post.setUpdatedAt(LocalDate.now().toString());
         postService.add(post);
         URI uri = URI.create("api/v1/post/" + post.getId());
         return ResponseEntity.created(uri).body(post.getId());
@@ -76,8 +73,16 @@ public class PostController {
 
         Post post = postMapper.postPutDTOToPost(entity);
         post.setId(id);
-        post.setCreatedAt(postService.findById(id).getCreatedAt());
-        post.setUpdatedAt(LocalDate.now().toString());
+        Post oldPost = postService.findById(id);
+        post.setCreatedAt(oldPost.getCreatedAt());
+        post.setPostTarget(oldPost.getPostTarget());
+        post.setSenderId(oldPost.getSenderId());
+        post.setReplyParentId(oldPost.getReplyParentId());
+        post.setReplies(oldPost.getReplies());
+        post.setTargetUser(oldPost.getTargetUser());
+        post.setTargetTopic(oldPost.getTargetTopic());
+        post.setTargetGroup(oldPost.getTargetGroup());
+
         postService.update(post);
         return ResponseEntity.noContent().build();
     }

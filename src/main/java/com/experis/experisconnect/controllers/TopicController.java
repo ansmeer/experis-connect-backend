@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.security.Principal;
-import java.time.LocalDate;
 import java.util.*;
 
 @CrossOrigin(origins = {"http://localhost:5173", "https://experis-connect.vercel.app"}, maxAge = 3600)
@@ -77,8 +76,6 @@ public class TopicController {
         Set<Users> user = new HashSet<>();
         user.add(usersService.findById(id));
         topic.setUsers(user);
-        topic.setCreatedAt(LocalDate.now().toString());
-        topic.setUpdatedAt(LocalDate.now().toString());
 
         topicService.add(topic);
         URI uri = URI.create("api/v1/topic/" + topic.getId());
@@ -99,7 +96,6 @@ public class TopicController {
         Topic topic = topicMapper.topicPutDTOToTopic(entity);
         topic.setId(id);
         topic.setCreatedAt(topicService.findById(id).getCreatedAt());
-        topic.setUpdatedAt(LocalDate.now().toString());
         topicService.update(topic);
         return ResponseEntity.noContent().build();
     }
@@ -126,6 +122,14 @@ public class TopicController {
             return ResponseEntity.badRequest().build();
         String userId = principal.getName();
         topicService.addUserToTopic(userId, id);
+        return ResponseEntity.noContent().build();
+    }
+    @PutMapping("{id}/leave")
+    public ResponseEntity<Object> removeUserFromTopic(Principal principal, @PathVariable int id){
+        if(!topicService.exists(id))
+            return ResponseEntity.badRequest().build();
+        String userId = principal.getName();
+        topicService.removeUserFromTopic(userId, id);
         return ResponseEntity.noContent().build();
     }
 

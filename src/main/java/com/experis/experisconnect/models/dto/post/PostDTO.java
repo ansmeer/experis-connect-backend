@@ -12,8 +12,8 @@ import java.util.Set;
 @Setter
 public class PostDTO {
     private int id;
-    private String createdAt;
-    private String updatedAt;
+    private java.time.ZonedDateTime createdAt;
+    private java.time.ZonedDateTime updatedAt;
     private String title;
     private String content;
     private String postTarget;

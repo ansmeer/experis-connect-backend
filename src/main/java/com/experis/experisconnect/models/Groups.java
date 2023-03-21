@@ -3,6 +3,8 @@ package com.experis.experisconnect.models;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Set;
 
@@ -14,9 +16,13 @@ public class Groups {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(name="created_at")
-    private String createdAt;
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    private java.time.ZonedDateTime createdAt;
     @Column(name="updated_at")
-    private String updatedAt;
+    @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    private java.time.ZonedDateTime updatedAt;
     @Column
     private String name;
     @Column

@@ -12,6 +12,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -23,6 +25,8 @@ public interface UsersMapper {
     // @Mapping(target = "posted", qualifiedByName = "postsToPostId")
     @Mapping(target = "groups", qualifiedByName = "groupsToGroupsId")
     @Mapping(target = "topics", qualifiedByName = "topicsToTopicsId")
+    @Mapping(target = "createdAt", source = "createdAt")
+    @Mapping(target = "updatedAt", source = "updatedAt")
     UsersDTO usersToUsersDTO(Users users);
     Collection<UsersDTO> usersToUsersDTO(Collection<Users> users);
     UsersMiniDTO usersToUsersMiniDTO(Users users);
@@ -47,5 +51,8 @@ public interface UsersMapper {
         return value.stream()
                 .map(s -> s.getId())
                 .collect(Collectors.toSet());
+    }
+    default java.time.ZonedDateTime timeMap(Instant instant){
+        return instant == null ? null : ZonedDateTime.from(instant);
     }
 }

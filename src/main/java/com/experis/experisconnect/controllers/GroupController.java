@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.security.Principal;
-import java.time.LocalDate;
 import java.util.*;
 
 @CrossOrigin(origins = {"http://localhost:5173", "https://experis-connect.vercel.app"}, maxAge = 3600)
@@ -87,8 +86,6 @@ public class GroupController {
         Set<Users> user = new HashSet<>();
         user.add(usersService.findById(id));
         group.setUsers(user);
-        group.setCreatedAt(LocalDate.now().toString());
-        group.setUpdatedAt(LocalDate.now().toString());
         groupService.add(group);
         URI uri = URI.create("api/v1/group/" + group.getId());
         return ResponseEntity.created(uri).build();
@@ -109,7 +106,6 @@ public class GroupController {
         Groups oldGroup = groupService.findById(id);
         group.setId(id);
         group.setCreatedAt(oldGroup.getCreatedAt());
-        group.setUpdatedAt(LocalDate.now().toString());
         group.setUsers(oldGroup.getUsers());
         groupService.update(group);
         return ResponseEntity.noContent().build();
@@ -134,6 +130,22 @@ public class GroupController {
             userId = principal.getName();
         }
         groupService.addUserToGroup(userId, id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("{id}/leave")
+    @Operation(summary = "Remove a user from a group", tags = {"Group", "Users"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Group updated", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Bad request, URI does not match request body", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Group not found", content = @Content)
+    })
+    public ResponseEntity<Object> removeUserFromGroup(Principal principal, @PathVariable int id){
+        if (!groupService.exists(id))
+            return ResponseEntity.badRequest().build();
+
+        String userId = principal.getName();
+        groupService.removeUserFromGroup(userId, id);
         return ResponseEntity.noContent().build();
     }
 
