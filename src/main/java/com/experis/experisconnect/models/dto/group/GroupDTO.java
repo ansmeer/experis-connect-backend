@@ -7,8 +7,8 @@ import lombok.Setter;
 @Setter
 public class GroupDTO {
     private int id;
-    private String createdAt;
-    private String updatedAt;
+    private java.time.ZonedDateTime createdAt;
+    private java.time.ZonedDateTime updatedAt;
     private String name;
     private String description;
     private String color;

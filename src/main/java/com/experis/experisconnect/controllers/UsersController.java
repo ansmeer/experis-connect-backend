@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.security.Principal;
-import java.time.LocalDate;
 import java.util.Base64;
 import java.util.Collection;
 
@@ -85,8 +84,6 @@ public class UsersController {
         Users user = new Users();
         user.setId(id);
         user.setName(name);
-        user.setCreatedAt(LocalDate.now().toString());
-        user.setUpdatedAt(LocalDate.now().toString());
         usersService.add(user);
         URI uri = URI.create("api/v1/users/" +1);
 
@@ -107,7 +104,6 @@ public class UsersController {
         Users users = usersMapper.usersPutDTOToUsers(entity);
         users.setId(id);
         users.setCreatedAt(usersService.findById(id).getCreatedAt());
-        users.setUpdatedAt(LocalDate.now().toString());
         usersService.update(users);
         return ResponseEntity.ok(usersMapper.usersToUsersDTO(usersService.findById(id)));
     }

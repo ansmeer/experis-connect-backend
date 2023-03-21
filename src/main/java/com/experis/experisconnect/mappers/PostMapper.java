@@ -17,6 +17,8 @@ import com.experis.experisconnect.services.users.UsersService;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -39,6 +41,8 @@ public abstract class PostMapper {
     @Mapping(target = "senderId", source = "senderId", qualifiedByName = "userToSenderDTO")
     @Mapping(target = "replyParentId", source = "replyParentId.id")
     @Mapping(target = "replies", source = "replies", qualifiedByName = "postsToPostId")
+    @Mapping(target = "createdAt", source = "createdAt")
+    @Mapping(target = "updatedAt", source = "updatedAt")
     public abstract PostDTO postToPostDTO(Post post);
 
     public abstract Collection<PostDTO> postToPostDTO(Collection<Post> posts);
@@ -124,5 +128,9 @@ public abstract class PostMapper {
         return value.stream()
                 .map(Post::getId)
                 .collect(Collectors.toSet());
+    }
+
+    java.time.ZonedDateTime timeMap(Instant instant){
+        return instant == null ? null : ZonedDateTime.from(instant);
     }
 }
