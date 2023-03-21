@@ -1,5 +1,6 @@
 package com.experis.experisconnect.services.topic;
 
+import com.experis.experisconnect.exceptions.GroupNotFoundException;
 import com.experis.experisconnect.exceptions.TopicNotFoundException;
 import com.experis.experisconnect.models.Topic;
 import com.experis.experisconnect.repositories.TopicRepository;
@@ -63,6 +64,16 @@ public class TopicServiceImpl implements TopicService{
         return topicRepository.save(topic);
         // topicService.findById(id).getUsers().add(usersService.findById(userId));
 
+    }
+
+    @Override
+    public Topic removeUserFromTopic(String userId, int topicId) {
+        Topic topic = topicRepository.findById(topicId).orElseThrow(() -> new GroupNotFoundException(topicId));
+        boolean executed = topic.getUsers().remove(usersRepository.findById(userId).get());
+        if(!executed)
+            return topic;
+
+        return topicRepository.save(topic);
     }
 
     @Override

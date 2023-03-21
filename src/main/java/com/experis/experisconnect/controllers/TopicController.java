@@ -124,6 +124,14 @@ public class TopicController {
         topicService.addUserToTopic(userId, id);
         return ResponseEntity.noContent().build();
     }
+    @PutMapping("{id}/leave")
+    public ResponseEntity<Object> removeUserFromTopic(Principal principal, @PathVariable int id){
+        if(!topicService.exists(id))
+            return ResponseEntity.badRequest().build();
+        String userId = principal.getName();
+        topicService.removeUserFromTopic(userId, id);
+        return ResponseEntity.noContent().build();
+    }
 
     @GetMapping("/user")
     @Operation(summary = "Get all topics for a user", tags = {"Topic", "Users", "Get"})
