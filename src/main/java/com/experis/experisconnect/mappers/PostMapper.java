@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -125,6 +126,8 @@ public abstract class PostMapper {
 
     @Named(value = "postsToPostId")
     Set<Integer> map(Set<Post> value) {
+        if(value == null)
+            return new HashSet<>();
         return value.stream()
                 .map(Post::getId)
                 .collect(Collectors.toSet());

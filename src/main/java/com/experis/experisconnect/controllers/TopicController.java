@@ -79,7 +79,7 @@ public class TopicController {
 
         topicService.add(topic);
         URI uri = URI.create("api/v1/topic/" + topic.getId());
-        return ResponseEntity.created(uri).build();
+        return ResponseEntity.created(uri).body(topic.getId());
     }
 
     @PutMapping("{id}")

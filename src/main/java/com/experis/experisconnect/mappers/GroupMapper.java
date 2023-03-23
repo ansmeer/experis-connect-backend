@@ -9,10 +9,10 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -28,6 +28,8 @@ public interface GroupMapper {
 
     @Named(value = "postsToPostId")
     default Set<Integer> map(Set<Post> value){
+        if(value == null)
+            return new HashSet<>();
         return value.stream()
                 .map(s -> s.getId())
                 .collect(Collectors.toSet());
