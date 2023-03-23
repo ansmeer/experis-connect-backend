@@ -201,4 +201,10 @@ public class PostController {
         String userId = principal.getName();
         return ResponseEntity.ok(postMapper.postToPostDTO(postService.findPostsFromGroupUserIsSubscribedTo(userId)));
     }
+
+    @GetMapping("{id}/replies")
+    public ResponseEntity<Collection<PostDTO>> findRepliesToAPost(@PathVariable int id){
+        Post post = postService.findById(id);
+        return ResponseEntity.ok(postMapper.postToPostDTO(post.getReplies()));
+    }
 }

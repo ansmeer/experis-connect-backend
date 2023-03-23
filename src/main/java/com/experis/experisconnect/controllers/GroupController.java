@@ -88,7 +88,7 @@ public class GroupController {
         group.setUsers(user);
         groupService.add(group);
         URI uri = URI.create("api/v1/group/" + group.getId());
-        return ResponseEntity.created(uri).build();
+        return ResponseEntity.created(uri).body(group.getId());
     }
     @PutMapping("{id}")
     @Operation(summary = "Update a group", tags = {"Group", "Put"})
