@@ -85,7 +85,7 @@ public class UsersController {
         user.setId(id);
         user.setName(name);
         usersService.add(user);
-        URI uri = URI.create("api/v1/users/" +1);
+        URI uri = URI.create("api/v1/users/" + user.getId());
 
         return ResponseEntity.created(uri).body(usersMapper.usersToUsersDTO(usersService.findById(id)));
     }

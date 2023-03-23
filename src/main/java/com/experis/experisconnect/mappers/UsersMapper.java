@@ -15,6 +15,7 @@ import org.mapstruct.Named;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -36,18 +37,24 @@ public interface UsersMapper {
 
     @Named(value = "postsToPostId")
     default Set<Integer> map(Set<Post> value){
+        if(value == null)
+            return new HashSet<>();
         return value.stream()
                 .map(s -> s.getId())
                 .collect(Collectors.toSet());
     }
     @Named(value = "groupsToGroupsId")
     default Set<Integer> mapGroups(Set<Groups> value){
+        if(value == null)
+            return new HashSet<>();
         return value.stream()
                 .map(s -> s.getId())
                 .collect(Collectors.toSet());
     }
     @Named(value = "topicsToTopicsId")
     default Set<Integer> mapTopics(Set<Topic> value){
+        if(value == null)
+            return new HashSet<>();
         return value.stream()
                 .map(s -> s.getId())
                 .collect(Collectors.toSet());
