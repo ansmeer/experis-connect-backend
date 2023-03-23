@@ -68,6 +68,8 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Set<Post> findPostsUserSubscribedTo(String id, String search, int limit, int offset) {
+        if(search == "")
+            return postRepository.findPostsThatUserSubscribesToWithLimitOffset(id, search, limit, offset);
         return postRepository.findPostsThatUserSubscribesToWithSearchLimitOffset(id, search, limit, offset);
     }
 

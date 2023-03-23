@@ -30,6 +30,11 @@ public class Post {
     @Column(name = "post_target")
     private String postTarget;
     @ManyToOne
+    @JoinColumn(name = "origin_id")
+    private Post origin;
+    @OneToMany(mappedBy = "origin")
+    private Set<Post> thread;
+    @ManyToOne
     @JoinColumn(name = "owner_id")
     private Users senderId;
     @ManyToOne
