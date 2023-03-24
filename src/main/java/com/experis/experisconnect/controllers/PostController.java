@@ -234,6 +234,13 @@ public class PostController {
     }
 
     @GetMapping("{id}/replies")
+    @Operation(summary = "Get all replies for a post", tags = {"Posts", "Users", "Get"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            array = @ArraySchema(schema = @Schema(implementation = PostDTO.class)))),
+            @ApiResponse(responseCode = "404", description = "Replies not found", content = @Content)
+    })
     public ResponseEntity<Collection<PostDTO>> findRepliesToAPost(@PathVariable int id){
         Post post = postService.findById(id);
         return ResponseEntity.ok(postMapper.postToPostDTO(post.getReplies()));

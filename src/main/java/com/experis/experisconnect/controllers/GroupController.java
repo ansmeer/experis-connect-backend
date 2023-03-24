@@ -134,7 +134,7 @@ public class GroupController {
     }
 
     @PutMapping("{id}/leave")
-    @Operation(summary = "Remove a user from a group", tags = {"Group", "Users"})
+    @Operation(summary = "Remove a user from a group", tags = {"Group", "Users", "Put"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Group updated", content = @Content),
             @ApiResponse(responseCode = "400", description = "Bad request, URI does not match request body", content = @Content),

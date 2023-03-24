@@ -125,6 +125,12 @@ public class TopicController {
         return ResponseEntity.noContent().build();
     }
     @PutMapping("{id}/leave")
+    @Operation(summary = "Update a topic", tags = {"Topic", "Users", "Put"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "User removed", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Bad request, URI does not match request body", content = @Content),
+            @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
+    })
     public ResponseEntity<Object> removeUserFromTopic(Principal principal, @PathVariable int id){
         if(!topicService.exists(id))
             return ResponseEntity.badRequest().build();
