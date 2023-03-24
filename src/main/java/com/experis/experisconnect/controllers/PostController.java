@@ -6,12 +6,14 @@ import com.experis.experisconnect.models.dto.post.PostDTO;
 import com.experis.experisconnect.models.dto.post.PostPostDTO;
 import com.experis.experisconnect.models.dto.post.PostPutDTO;
 import com.experis.experisconnect.services.post.PostService;
+import com.experis.experisconnect.services.users.UsersService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,10 +32,12 @@ import java.util.Optional;
 public class PostController {
     private final PostService postService;
     private final PostMapper postMapper;
+    private final UsersService usersService;
 
-    public PostController(PostService postService, PostMapper postMapper) {
+    public PostController(PostService postService, PostMapper postMapper, UsersService usersService) {
         this.postService = postService;
         this.postMapper = postMapper;
+        this.usersService = usersService;
     }
 
     @GetMapping("{id}")
@@ -42,10 +46,22 @@ public class PostController {
             @ApiResponse(responseCode = "200", description = "Success",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = PostDTO.class))),
+            @ApiResponse(responseCode = "403", description = "Access denied to the post", content = @Content),
             @ApiResponse(responseCode = "404", description = "Post not found", content = @Content)
+
     })
-    public ResponseEntity<PostDTO> findById(@PathVariable int id) {
-        return ResponseEntity.ok(postMapper.postToPostDTO(postService.findById(id)));
+    public ResponseEntity<PostDTO> findById(Principal principal, @PathVariable int id) {
+
+        Post post = postService.findById(id);
+        String userId = principal.getName();
+        if(post.getPostTarget().equals("USER") && (post.getTargetUser().getId().equals(userId) || post.getSenderId().getId().equals(userId)))
+            return ResponseEntity.ok(postMapper.postToPostDTO(post));
+        if(post.getPostTarget().equals("GROUP") && (!post.getTargetGroup().isPrivate() || post.getTargetGroup().getUsers().contains(usersService.findById(userId))))
+            return ResponseEntity.ok(postMapper.postToPostDTO(post));
+        if(post.getPostTarget().equals("TOPIC"))
+            return ResponseEntity.ok(postMapper.postToPostDTO(post));
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
     @PostMapping
@@ -70,11 +86,14 @@ public class PostController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Post updated", content = @Content),
             @ApiResponse(responseCode = "400", description = "Bad request, URI does not match request body", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Access denied to the post", content = @Content),
             @ApiResponse(responseCode = "404", description = "Post not found", content = @Content)
     })
-    public ResponseEntity<Object> update(@RequestBody PostPutDTO entity, @PathVariable int id) {
+    public ResponseEntity<Object> update(Principal principal, @RequestBody PostPutDTO entity, @PathVariable int id) {
         if (!postService.exists(id))
             return ResponseEntity.badRequest().build();
+        if(postService.findById(id).getSenderId().getId().equals(principal.getName()))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 
         Post post = postMapper.postPutDTOToPost(entity);
         post.setId(id);
