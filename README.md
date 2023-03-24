@@ -1,6 +1,6 @@
 # Experis Connect (Backend)
 
-### Description:
+## Description:
 
 This project is about creating an Alumni Network Portal for maintaining contact with current and previous candidates in the Noroff Accelerate program.
 
