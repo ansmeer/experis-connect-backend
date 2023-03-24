@@ -74,12 +74,12 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Set<Post> findPostsFromTopicUserIsSubscribedTo(String id) {
-        return postRepository.findAllPostsFromATopicUserIsSubscribedTo(id);
+    public Set<Post> findPostsFromTopicUserIsSubscribedTo(String id, String search, int limit, int offset) {
+        return postRepository.findAllPostsFromATopicUserIsSubscribedTo(id, search, limit, offset);
     }
 
     @Override
-    public Set<Post> findPostsFromGroupUserIsSubscribedTo(String id) {
-        return postRepository.findAllPostsFromAGroupUserIsSubscribedTo(id);
+    public Set<Post> findPostsFromGroupUserIsSubscribedTo(String id, String search, int limit, int offset) {
+        return postRepository.findAllPostsFromAGroupUserIsSubscribedTo(id, search, limit, offset);
     }
 }
