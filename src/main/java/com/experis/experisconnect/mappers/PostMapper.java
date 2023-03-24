@@ -42,6 +42,7 @@ public abstract class PostMapper {
     @Mapping(target = "senderId", source = "senderId", qualifiedByName = "userToSenderDTO")
     @Mapping(target = "replyParentId", source = "replyParentId.id")
     @Mapping(target = "replies", source = "replies", qualifiedByName = "postsToPostId")
+    @Mapping(target = "originId", source = "origin.id")
     @Mapping(target = "createdAt", source = "createdAt")
     @Mapping(target = "updatedAt", source = "updatedAt")
     public abstract PostDTO postToPostDTO(Post post);

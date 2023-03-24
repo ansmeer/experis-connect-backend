@@ -18,6 +18,7 @@ public class PostDTO {
     private String content;
     private String postTarget;
     private SenderDTO senderId;
+    private int originId;
     private int replyParentId;
     private Set<Integer> replies;
     private String targetUser;

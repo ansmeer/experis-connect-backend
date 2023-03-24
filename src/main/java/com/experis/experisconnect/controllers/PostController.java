@@ -55,6 +55,11 @@ public class PostController {
     })
     public ResponseEntity<Object> add(@RequestBody PostPostDTO entity) {
         Post post = postMapper.postPostDTOToPost(entity);
+        Post parentPost = post;
+        while(parentPost.getReplyParentId() != null){
+            parentPost = parentPost.getReplyParentId();
+        }
+        post.setOrigin(parentPost);
         postService.add(post);
         URI uri = URI.create("api/v1/post/" + post.getId());
         return ResponseEntity.created(uri).body(post.getId());
@@ -79,6 +84,7 @@ public class PostController {
         post.setSenderId(oldPost.getSenderId());
         post.setReplyParentId(oldPost.getReplyParentId());
         post.setReplies(oldPost.getReplies());
+        post.setOrigin(oldPost.getOrigin());
         post.setTargetUser(oldPost.getTargetUser());
         post.setTargetTopic(oldPost.getTargetTopic());
         post.setTargetGroup(oldPost.getTargetGroup());
