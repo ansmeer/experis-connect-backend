@@ -21,7 +21,7 @@ public class PostDTO {
     private int originId;
     private int replyParentId;
     private Set<Integer> replies;
-    private String targetUser;
+    private SenderDTO targetUser;
     private GroupMiniDTO targetGroup;
     private TopicMiniDTO targetTopic;
 }

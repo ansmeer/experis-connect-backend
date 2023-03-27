@@ -38,7 +38,7 @@ public abstract class PostMapper {
 
     @Mapping(target = "targetGroup", source = "targetGroup", qualifiedByName = "groupToMiniDTO")
     @Mapping(target = "targetTopic", source = "targetTopic", qualifiedByName = "topicToMiniDTO")
-    @Mapping(target = "targetUser", source = "targetUser.id")
+    @Mapping(target = "targetUser", source = "targetUser", qualifiedByName = "targetUserToSenderDTO")
     @Mapping(target = "senderId", source = "senderId", qualifiedByName = "userToSenderDTO")
     @Mapping(target = "replyParentId", source = "replyParentId.id")
     @Mapping(target = "replies", source = "replies", qualifiedByName = "postsToPostId")
@@ -67,6 +67,17 @@ public abstract class PostMapper {
         sender.setName(value.getName());
         sender.setPicture(value.getPicture());
         return sender;
+    }
+
+    @Named(value = "targetUserToSenderDTO")
+    SenderDTO mapTargetUser(Users user){
+        if(user == null)
+            return null;
+        SenderDTO targetUser = new SenderDTO();
+        targetUser.setId(user.getId());
+        targetUser.setName(user.getName());
+        targetUser.setPicture(user.getPicture());
+        return targetUser;
     }
 
     @Named(value = "groupToMiniDTO")
