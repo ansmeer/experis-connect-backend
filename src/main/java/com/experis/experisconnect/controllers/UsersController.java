@@ -112,9 +112,12 @@ public class UsersController {
         String[] chunks = token.split("\\.");
         Base64.Decoder decoder = Base64.getUrlDecoder();
         String payload = new String(decoder.decode(chunks[1]));
-        int nameIndex = payload.indexOf("\"name\": ");
-        String nameChunk = token.substring(nameIndex);
+        System.out.println(payload);
+        int nameIndex = payload.indexOf("\"name\":");
+        String nameChunk = payload.substring(nameIndex);
+        System.out.println(nameChunk);
         String[] nameChunks = nameChunk.split("\"");
+        System.out.println(nameChunks[3]);
         return nameChunks[3];
     }
 }
