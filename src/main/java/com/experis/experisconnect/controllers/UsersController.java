@@ -23,8 +23,6 @@ import java.security.Principal;
 import java.util.Base64;
 import java.util.Collection;
 
-@CrossOrigin(origins = {"http://localhost:5173", "https://experis-connect.vercel.app"}, maxAge = 3600)
-    // TODO move origins to environment variables
 @PreAuthorize("hasRole('USER')")
 @RestController
 @RequestMapping(path = "api/v1/user")
@@ -45,9 +43,10 @@ public class UsersController {
                             schema = @Schema(implementation = UsersDTO.class))),
             @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
     })
-    public ResponseEntity<UsersDTO> findById(@PathVariable String id){
+    public ResponseEntity<UsersDTO> findById(@PathVariable String id) {
         return ResponseEntity.ok(usersMapper.usersToUsersDTO(usersService.findById(id)));
     }
+
     @GetMapping("/list")
     @Operation(summary = "Get all user summaries", tags = {"Users", "Get"})
     @ApiResponses(value = {
@@ -55,7 +54,7 @@ public class UsersController {
                     content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             array = @ArraySchema(schema = @Schema(implementation = UsersMiniDTO.class)))})
     })
-    public ResponseEntity<Collection<UsersMiniDTO>> findAll(){
+    public ResponseEntity<Collection<UsersMiniDTO>> findAll() {
         return ResponseEntity.ok(usersMapper.usersToUsersMiniDTO(usersService.findAll()));
     }
 
@@ -66,7 +65,7 @@ public class UsersController {
                     content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             array = @ArraySchema(schema = @Schema(implementation = UsersDTO.class)))})
     })
-    public ResponseEntity<UsersDTO> findCurrentUser(Principal principal){
+    public ResponseEntity<UsersDTO> findCurrentUser(Principal principal) {
         // TODO Make this 303 See Other
         String id = principal.getName();
         return ResponseEntity.ok(usersMapper.usersToUsersDTO(usersService.findById(id)));
@@ -77,7 +76,7 @@ public class UsersController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Created", content = @Content)
     })
-    public ResponseEntity<UsersDTO> add(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, Principal principal){
+    public ResponseEntity<UsersDTO> add(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, Principal principal) {
         String id = principal.getName();
         String name = getNameFromToken(token);
 
@@ -97,8 +96,8 @@ public class UsersController {
             @ApiResponse(responseCode = "400", description = "Bad request, URI does not match request body", content = @Content),
             @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
     })
-    public ResponseEntity<UsersDTO> update(@RequestBody UsersPutDTO entity, @PathVariable String id){
-        if(!usersService.exists(id))
+    public ResponseEntity<UsersDTO> update(@RequestBody UsersPutDTO entity, @PathVariable String id) {
+        if (!usersService.exists(id))
             return ResponseEntity.badRequest().build();
 
         Users users = usersMapper.usersPutDTOToUsers(entity);
@@ -108,7 +107,7 @@ public class UsersController {
         return ResponseEntity.ok(usersMapper.usersToUsersDTO(usersService.findById(id)));
     }
 
-    private String getNameFromToken(String token){
+    private String getNameFromToken(String token) {
         String[] chunks = token.split("\\.");
         Base64.Decoder decoder = Base64.getUrlDecoder();
         String payload = new String(decoder.decode(chunks[1]));

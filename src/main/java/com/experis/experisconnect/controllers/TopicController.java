@@ -23,10 +23,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.security.Principal;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
-@CrossOrigin(origins = {"http://localhost:5173", "https://experis-connect.vercel.app"}, maxAge = 3600)
-    // TODO move origins to environment variables
 @PreAuthorize("hasRole('USER')")
 @RestController
 @RequestMapping(path = "api/v1/topic")
@@ -50,7 +51,7 @@ public class TopicController {
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
             @ApiResponse(responseCode = "404", description = "Topic not found", content = @Content)
     })
-    public ResponseEntity<TopicDTO> findById(@PathVariable int id){
+    public ResponseEntity<TopicDTO> findById(@PathVariable int id) {
         return ResponseEntity.ok(topicMapper.topicToTopicDTO(topicService.findById(id)));
     }
 
@@ -60,7 +61,7 @@ public class TopicController {
             @ApiResponse(responseCode = "200", description = "Success",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
     })
-    public ResponseEntity<Collection<TopicDTO>> findAll(@RequestParam Optional<String> search, Optional<Integer> limit, Optional<Integer> offset){
+    public ResponseEntity<Collection<TopicDTO>> findAll(@RequestParam Optional<String> search, Optional<Integer> limit, Optional<Integer> offset) {
         return ResponseEntity.ok(topicMapper.topicToTopicDTO(
                 topicService.searchResultsWithLimitOffset(search.orElse("").toLowerCase(), offset.orElse(0), limit.orElse(99999999))));
     }
@@ -70,7 +71,7 @@ public class TopicController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Created", content = @Content)
     })
-    public ResponseEntity<Object> add(@RequestBody TopicPostDTO entity, Principal principal){
+    public ResponseEntity<Object> add(@RequestBody TopicPostDTO entity, Principal principal) {
         Topic topic = topicMapper.topicPostDTOToTopic(entity);
         String id = principal.getName();
         Set<Users> user = new HashSet<>();
@@ -89,8 +90,8 @@ public class TopicController {
             @ApiResponse(responseCode = "400", description = "Bad request, URI does not match request body", content = @Content),
             @ApiResponse(responseCode = "404", description = "Topic not found", content = @Content)
     })
-    public ResponseEntity<Object> update(@RequestBody TopicPutDTO entity, @PathVariable int id){
-        if(!topicService.exists(id))
+    public ResponseEntity<Object> update(@RequestBody TopicPutDTO entity, @PathVariable int id) {
+        if (!topicService.exists(id))
             return ResponseEntity.badRequest().build();
 
         Topic topic = topicMapper.topicPutDTOToTopic(entity);
@@ -106,7 +107,7 @@ public class TopicController {
             @ApiResponse(responseCode = "204", description = "Topic deleted", content = @Content),
             @ApiResponse(responseCode = "404", description = "Topic not found", content = @Content)
     })
-    public ResponseEntity<Object> deleteById(@PathVariable int id){
+    public ResponseEntity<Object> deleteById(@PathVariable int id) {
         topicService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
@@ -117,13 +118,14 @@ public class TopicController {
             @ApiResponse(responseCode = "201", description = "Created", content = @Content),
             @ApiResponse(responseCode = "404", description = "Topic not found", content = @Content)
     })
-    public ResponseEntity<Object> addUserToTopic(Principal principal, @PathVariable int id){
-        if(!topicService.exists(id))
+    public ResponseEntity<Object> addUserToTopic(Principal principal, @PathVariable int id) {
+        if (!topicService.exists(id))
             return ResponseEntity.badRequest().build();
         String userId = principal.getName();
         topicService.addUserToTopic(userId, id);
         return ResponseEntity.noContent().build();
     }
+
     @PutMapping("{id}/leave")
     @Operation(summary = "Update a topic", tags = {"Topic", "Users", "Put"})
     @ApiResponses(value = {
@@ -131,8 +133,8 @@ public class TopicController {
             @ApiResponse(responseCode = "400", description = "Bad request, URI does not match request body", content = @Content),
             @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
     })
-    public ResponseEntity<Object> removeUserFromTopic(Principal principal, @PathVariable int id){
-        if(!topicService.exists(id))
+    public ResponseEntity<Object> removeUserFromTopic(Principal principal, @PathVariable int id) {
+        if (!topicService.exists(id))
             return ResponseEntity.badRequest().build();
         String userId = principal.getName();
         topicService.removeUserFromTopic(userId, id);
@@ -147,7 +149,7 @@ public class TopicController {
                             array = @ArraySchema(schema = @Schema(implementation = TopicDTO.class)))),
             @ApiResponse(responseCode = "404", description = "Topics not found", content = @Content)
     })
-    public ResponseEntity<Collection<TopicDTO>> findTopicsForAUser(Principal principal){
+    public ResponseEntity<Collection<TopicDTO>> findTopicsForAUser(Principal principal) {
         String userId = principal.getName();
         return ResponseEntity.ok(topicMapper.topicToTopicDTO(topicService.findTopicsWithUser(userId)));
     }
@@ -160,7 +162,7 @@ public class TopicController {
                             array = @ArraySchema(schema = @Schema(implementation = UsersDTO.class)))),
             @ApiResponse(responseCode = "404", description = "Topic not found", content = @Content)
     })
-    public ResponseEntity<Collection<UsersDTO>> findMembersOfTopic(@PathVariable int id){
+    public ResponseEntity<Collection<UsersDTO>> findMembersOfTopic(@PathVariable int id) {
         Topic topic = topicService.findById(id);
         return ResponseEntity.ok(usersMapper.usersToUsersDTO(topic.getUsers()));
     }
