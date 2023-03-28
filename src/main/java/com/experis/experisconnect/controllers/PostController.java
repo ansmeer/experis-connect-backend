@@ -24,8 +24,6 @@ import java.security.Principal;
 import java.util.Collection;
 import java.util.Optional;
 
-@CrossOrigin(origins = {"http://localhost:5173", "https://experis-connect.vercel.app"}, maxAge = 3600)
-// TODO move origins to environment variables
 @PreAuthorize("hasRole('USER')")
 @RestController
 @RequestMapping(path = "api/v1/post")
@@ -54,11 +52,11 @@ public class PostController {
 
         Post post = postService.findById(id);
         String userId = principal.getName();
-        if(post.getPostTarget().equals("USER") && (post.getTargetUser().getId().equals(userId) || post.getSenderId().getId().equals(userId)))
+        if (post.getPostTarget().equals("USER") && (post.getTargetUser().getId().equals(userId) || post.getSenderId().getId().equals(userId)))
             return ResponseEntity.ok(postMapper.postToPostDTO(post));
-        if(post.getPostTarget().equals("GROUP") && (!post.getTargetGroup().isPrivate() || post.getTargetGroup().getUsers().contains(usersService.findById(userId))))
+        if (post.getPostTarget().equals("GROUP") && (!post.getTargetGroup().isPrivate() || post.getTargetGroup().getUsers().contains(usersService.findById(userId))))
             return ResponseEntity.ok(postMapper.postToPostDTO(post));
-        if(post.getPostTarget().equals("TOPIC"))
+        if (post.getPostTarget().equals("TOPIC"))
             return ResponseEntity.ok(postMapper.postToPostDTO(post));
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -72,7 +70,7 @@ public class PostController {
     public ResponseEntity<Object> add(@RequestBody PostPostDTO entity) {
         Post post = postMapper.postPostDTOToPost(entity);
         Post parentPost = post;
-        while(parentPost.getReplyParentId() != null){
+        while (parentPost.getReplyParentId() != null) {
             parentPost = parentPost.getReplyParentId();
         }
         post.setOrigin(parentPost);
@@ -92,7 +90,7 @@ public class PostController {
     public ResponseEntity<Object> update(Principal principal, @RequestBody PostPutDTO entity, @PathVariable int id) {
         if (!postService.exists(id))
             return ResponseEntity.badRequest().build();
-        if(postService.findById(id).getSenderId().getId().equals(principal.getName()))
+        if (postService.findById(id).getSenderId().getId().equals(principal.getName()))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 
         Post post = postMapper.postPutDTOToPost(entity);
@@ -241,7 +239,7 @@ public class PostController {
                             array = @ArraySchema(schema = @Schema(implementation = PostDTO.class)))),
             @ApiResponse(responseCode = "404", description = "Replies not found", content = @Content)
     })
-    public ResponseEntity<Collection<PostDTO>> findRepliesToAPost(@PathVariable int id){
+    public ResponseEntity<Collection<PostDTO>> findRepliesToAPost(@PathVariable int id) {
         Post post = postService.findById(id);
         return ResponseEntity.ok(postMapper.postToPostDTO(post.getReplies()));
     }

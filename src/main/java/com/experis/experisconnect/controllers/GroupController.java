@@ -24,10 +24,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.security.Principal;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
-@CrossOrigin(origins = {"http://localhost:5173", "https://experis-connect.vercel.app"}, maxAge = 3600)
-    // TODO move origins to environment variables
 @PreAuthorize("hasRole('USER')")
 @RestController
 @RequestMapping(path = "api/v1/group")
@@ -52,12 +53,12 @@ public class GroupController {
                             schema = @Schema(implementation = GroupDTO.class))),
             @ApiResponse(responseCode = "404", description = "Group not found", content = @Content)
     })
-    public ResponseEntity<GroupDTO> findById(Principal principal, @PathVariable int id){
-        if(!groupService.exists(id))
+    public ResponseEntity<GroupDTO> findById(Principal principal, @PathVariable int id) {
+        if (!groupService.exists(id))
             return ResponseEntity.notFound().build();
         String userId = principal.getName();
         GroupDTO group = groupMapper.groupToGroupDTO(groupService.findByIdWhereUserHasAccess(userId, id));
-        if(group == null)
+        if (group == null)
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         return ResponseEntity.ok(group);
     }
@@ -69,7 +70,7 @@ public class GroupController {
                     content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             array = @ArraySchema(schema = @Schema(implementation = GroupDTO.class)))})
     })
-    public ResponseEntity<Collection<GroupDTO>> findAll(Principal principal, @RequestParam Optional<String> search, Optional<Integer> limit, Optional<Integer> offset){
+    public ResponseEntity<Collection<GroupDTO>> findAll(Principal principal, @RequestParam Optional<String> search, Optional<Integer> limit, Optional<Integer> offset) {
         String userId = principal.getName();
         return ResponseEntity.ok(groupMapper.groupToGroupDTO(
                 groupService.searchResultsWithLimitOffset(userId, search.orElse("").toLowerCase(), offset.orElse(0), limit.orElse(99999999))));
@@ -80,7 +81,7 @@ public class GroupController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Created", content = @Content)
     })
-    public ResponseEntity<Object> add(@RequestBody GroupPostDTO entity, Principal principal){
+    public ResponseEntity<Object> add(@RequestBody GroupPostDTO entity, Principal principal) {
         Groups group = groupMapper.groupPostDTOToGroup(entity);
         String id = principal.getName();
         Set<Users> user = new HashSet<>();
@@ -90,6 +91,7 @@ public class GroupController {
         URI uri = URI.create("api/v1/group/" + group.getId());
         return ResponseEntity.created(uri).body(group.getId());
     }
+
     @PutMapping("{id}")
     @Operation(summary = "Update a group", tags = {"Group", "Put"})
     @ApiResponses(value = {
@@ -97,10 +99,10 @@ public class GroupController {
             @ApiResponse(responseCode = "400", description = "Bad request, URI does not match request body", content = @Content),
             @ApiResponse(responseCode = "404", description = "Group not found", content = @Content)
     })
-    public ResponseEntity<Object> update(Principal principal, @RequestBody GroupPutDTO entity, @PathVariable int id){
-        if(!groupService.exists(id))
+    public ResponseEntity<Object> update(Principal principal, @RequestBody GroupPutDTO entity, @PathVariable int id) {
+        if (!groupService.exists(id))
             return ResponseEntity.badRequest().build();
-        if(!groupService.checkIfUserInGroup(principal.getName(), id))
+        if (!groupService.checkIfUserInGroup(principal.getName(), id))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         Groups group = groupMapper.groupPutDTOToGroup(entity);
         Groups oldGroup = groupService.findById(id);
@@ -110,23 +112,24 @@ public class GroupController {
         groupService.update(group);
         return ResponseEntity.noContent().build();
     }
+
     @PostMapping("{id}/join")
     @Operation(summary = "Add a user to a group", tags = {"Group", "Users", "Post"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Created", content = @Content),
             @ApiResponse(responseCode = "401", description = "Forbidden", content = @Content)
     })
-    public ResponseEntity<Object> addUserToGroup(Principal principal, @PathVariable int id, @RequestParam Optional<String> user){
+    public ResponseEntity<Object> addUserToGroup(Principal principal, @PathVariable int id, @RequestParam Optional<String> user) {
         if (!groupService.exists(id))
             return ResponseEntity.badRequest().build();
 
         boolean privateGroup = groupService.findById(id).isPrivate();
-        if(privateGroup) {
+        if (privateGroup) {
             if (!groupService.checkIfUserInGroup(principal.getName(), id))
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        String userId= user.orElse("");
-        if(userId.equals("")) {
+        String userId = user.orElse("");
+        if (userId.equals("")) {
             userId = principal.getName();
         }
         groupService.addUserToGroup(userId, id);
@@ -140,7 +143,7 @@ public class GroupController {
             @ApiResponse(responseCode = "400", description = "Bad request, URI does not match request body", content = @Content),
             @ApiResponse(responseCode = "404", description = "Group not found", content = @Content)
     })
-    public ResponseEntity<Object> removeUserFromGroup(Principal principal, @PathVariable int id){
+    public ResponseEntity<Object> removeUserFromGroup(Principal principal, @PathVariable int id) {
         if (!groupService.exists(id))
             return ResponseEntity.badRequest().build();
 
@@ -157,7 +160,7 @@ public class GroupController {
                             array = @ArraySchema(schema = @Schema(implementation = GroupDTO.class)))),
             @ApiResponse(responseCode = "404", description = "Group not found", content = @Content)
     })
-    public ResponseEntity<Collection<GroupDTO>> findGroupsForAUser(Principal principal){
+    public ResponseEntity<Collection<GroupDTO>> findGroupsForAUser(Principal principal) {
         String userId = principal.getName();
         return ResponseEntity.ok(groupMapper.groupToGroupDTO(groupService.findGroupsWithUser(userId)));
     }
@@ -170,7 +173,7 @@ public class GroupController {
                             array = @ArraySchema(schema = @Schema(implementation = UsersDTO.class)))),
             @ApiResponse(responseCode = "404", description = "Group not found", content = @Content)
     })
-    public ResponseEntity<Collection<UsersDTO>> findAllMembers(@PathVariable int id){
+    public ResponseEntity<Collection<UsersDTO>> findAllMembers(@PathVariable int id) {
         Groups groups = groupService.findById(id);
         return ResponseEntity.ok(usersMapper.usersToUsersDTO(groups.getUsers()));
     }
