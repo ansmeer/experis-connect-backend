@@ -1,34 +1,49 @@
 # Experis Connect (Backend)
 
-## Description:
+## Description
 
-This project is about creating an Alumni Network Portal for maintaining contact with current and previous candidates in the Noroff Accelerate program.
+This repository contains the code for a RESTful API that provides data access for the Experis Connect application.
 
 ## Table of Contents
 
+- [Background](#background)
 - [Install](#Install)
 - [Usage](#Usage)
-- [Techonolgies](#technologies)
 - [Maintainers](#Maintainers)
 - [Contributing](#Contributing)
 - [License](#License)
 
+## Background
+
+The aim of this project was to create an Alumni Networking Portal to maintain contact between current and previous
+candidates in the Noroff Accelerate program.
+
+### Technologies
+
+- [PostgreSQL](https://www.postgresql.org/)
+- [Spring Boot, Spring Boot Web, Spring Security, Spring Data JPA](https://spring.io/)
+- [Hibernate](https://hibernate.org/)
+- [Maven](https://maven.apache.org/)
+- [Lombok](https://projectlombok.org/)
+- [Mapstruct](https://mapstruct.org/)
+- [Docker](https://www.docker.com/)
+- [Swagger](https://swagger.io/)
+
 ## Install
 
-Use `git clone` to clone the repository. Run/build the project in IntelliJ to install dependencies. Setup a postgreSQL database with the URL, UserName and Password from the dev.properties file.
+Use `git clone` to clone the repository. Run/build the project in IntelliJ to install dependencies. Setup a postgreSQL
+database with the URL, username and password from the dev.properties file.
 
 ## Usage
 
-## Technologies
+### Environment variables
 
-[PostgreSQL](https://www.postgresql.org/)
-[Spring Boot, Spring Boot Web, Spring Security, Hibernate, Maven, Lombok, Spring Data JPA, Mapstruct](https://spring.io/)
-[Docker](https://www.docker.com/)
-[Swagger](https://swagger.io/)
+When starting the application, provide the required environment variables via the IntelliJ configuration.
 
 ### Development server
 
-Run the project for a dev server. Navigate to `http://localhost:8080/swagger-ui/index.html`, to see if the project is running.
+Run the project for a dev server. Navigate to `http://localhost:8080/swagger-ui/index.html` to see if the project is
+running and to see the available API endpoints.
 
 ## Maintainers
 
