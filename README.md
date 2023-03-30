@@ -40,10 +40,25 @@ database with the URL, username and password from the dev.properties file.
 
 When starting the application, provide the required environment variables via the IntelliJ configuration.
 
+```
+SPRING_PROFILE=dev
+SPRING_ALLOWED_ORIGIN=http://localhost:5173
+```
+
 ### Development server
 
-Run the project for a dev server. Navigate to `http://localhost:8080/swagger-ui/index.html` to see if the project is
+Run the project for a dev server. Navigate to <http://localhost:8080/swagger-ui/index.html> to see if the project is
 running and to see the available API endpoints.
+
+### Authentication
+
+All endpoints are access-restricted and require a valid JWT. Configure the relevant properties
+in `application-dev.proprties` and `application-production.properties`:
+
+```
+spring.security.oauth2.resourceserver.jwt.issuer-uri=
+spring.security.oauth2.resourceserver.jwt.jwk-set-uri=
+```
 
 ## Maintainers
 
